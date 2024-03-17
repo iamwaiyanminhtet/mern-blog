@@ -13,7 +13,7 @@ export const signUp = async (req, res, next) => {
 
     // check if inputs are empty
     if(!username || username === '' || !email || email === '' || !password || password === '' || !confirmPassword || confirmPassword === '') {
-        return res.json({message : "All Fields are required"});
+        return next(errorHandler(400, "All Fileds are required!"));
     }
 
     // validate signup data with express-validator
