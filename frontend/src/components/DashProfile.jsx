@@ -1,18 +1,21 @@
 import { useSelector, useDispatch } from "react-redux"
-import { Avatar, Breadcrumb, Card, FileInput, Label, FloatingLabel, Button, Progress, Toast, Spinner } from 'flowbite-react'
-import { HiHome, HiExclamation, HiCheck } from 'react-icons/hi';
+import { Avatar, Breadcrumb, Card, FileInput, Label, FloatingLabel, Button, Progress, Toast, Spinner, Modal } from 'flowbite-react'
+import { HiHome, HiExclamation, HiCheck, HiOutlineExclamationCircle } from 'react-icons/hi';
 import { BiSolidUpArrowSquare } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
 import { useState } from "react";
-import { ref, getStorage, uploadBytesResumable, getDownloadURL } from "firebase/storage"
-import { Link } from "react-router-dom";
-import { updateSuccess } from "../redux/user/user.slice.js";
+import { ref, getStorage, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage"
+import { Link, useNavigate } from "react-router-dom";
+import { updateSuccess, signOutSuccess } from "../redux/user/user.slice.js";
 
 
 const DashProfile = () => {
   const { user } = useSelector(state => state.user)
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
+  const [modal, setModal] = useState(false);
 
   // upload file input locally
   const [imgFile, setImgFile] = useState();
@@ -40,6 +43,21 @@ const DashProfile = () => {
   // update img to fire base
   const handleImgUpdate = () => {
     uploadImgToFirebase();
+  }
+
+  // delete img from firebase
+  const deleteImgFromFirebase = (imageUrl) => {
+    const storage = getStorage();
+
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, imageUrl);
+
+    // Delete the file
+    deleteObject(desertRef).then(() => {
+      console.log('file deleted')
+    }).catch((error) => {
+      console.log(error)
+    });
   }
 
   // upload img to firebase
@@ -80,7 +98,10 @@ const DashProfile = () => {
           setImageFileUploadError(null);
           setIsImageUploading(false);
           try {
-            updateUserFetch({pfp : downloadUrl})
+            if (user.pfp.includes('firebasestorage.googleapis.com')) {
+              deleteImgFromFirebase(user.pfp)
+            }
+            updateUserFetch({ pfp: downloadUrl })
           } catch (error) {
             setImageFileUploadError(error.message)
           }
@@ -143,6 +164,27 @@ const DashProfile = () => {
     } {
       setUpdateUserError(data.message)
       setUpdateUserLoading(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    // delete firebase image first
+    if (user.pfp.includes('firebasestorage.googleapis.com')) {
+      deleteImgFromFirebase(user.pfp)
+    }
+
+    const res = await fetch(`/api/user/delete/${user._id}`, {
+      method: "DELETE",
+      headers: { 'Content-Type': 'application/json' }
+    })
+
+    const data = await res.json();
+    if(data.success === false) {
+      console.log(data.message)
+    }
+    if(res.ok) {
+      dispatch(signOutSuccess())
+      navigate('/signin')
     }
   }
 
@@ -226,19 +268,44 @@ const DashProfile = () => {
                 <FloatingLabel variant="outlined" label="username" id="username" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} defaultValue={user.username} />
                 <FloatingLabel variant="outlined" label="email" id="email" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} defaultValue={user.email} />
                 <FloatingLabel variant="outlined" label="password" id="password" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} type="password" />
-                <Button gradientDuoTone="greenToBlue" className="text-black" type="submit" >
+                <Button gradientDuoTone="greenToBlue" className="text-black" type="button" >
                   {
                     updateUserLoading ?
                       <>
                         <Spinner size="sm" /> <span className="ms-2">Update</span>
                       </> :
-                      <span>Update</span>
+                      <>
+                      <BiSolidUpArrowSquare/>
+                      <span className="ms-2" >Update</span>
+                      </>
                   }
                 </Button>
+                <Button color="red" onClick={() => setModal(true)} >
+                  <MdDelete/> <span className="ms-2">Delete Account</span>
+                </Button>
               </div>
-
             </form>
           </Card>
+
+          <Modal show={modal} size="md" onClose={() => setModal(false)} popup>
+            <Modal.Header />
+            <Modal.Body>
+              <div className="text-center">
+                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                  Are you sure you want to delete this account?
+                </h3>
+                <div className="flex justify-center gap-4">
+                  <Button color="failure" onClick={() => handleDelete()}>
+                    {"Yes, I'm sure"}
+                  </Button>
+                  <Button color="gray" onClick={() => setModal(false)}>
+                    No, cancel
+                  </Button>
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
         </div>
       </div>
 

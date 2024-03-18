@@ -57,7 +57,14 @@ const NavBarComponent = () => {
                             arrowIcon={false}
                             inline
                             label={
-                                <Avatar alt={user.username} img={user.pfp || user.defaultPfp} rounded bordered status='online' statusPosition='bottom-right' />
+                                <Avatar alt={user.username} img={(props) => (
+                                    <img
+                                     alt="user"
+                                     referrerPolicy="no-referrer"
+                                     src={user.pfp || user.defaultPfp}
+                                     {...props}
+                                 /> 
+                             )} rounded bordered status='online' statusPosition='bottom-right' />
                             }
                             className="z-50"
                         >
