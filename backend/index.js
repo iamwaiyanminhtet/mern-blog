@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
 import mongoose from "mongoose";
-import { error } from "console";
 
 const app = express();
 dotenv.config();
@@ -27,6 +27,7 @@ app.use(cookieParser());
 
 // routes
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 
 // last error middleware
 app.use((err, req, res, next) => {

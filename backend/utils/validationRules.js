@@ -2,7 +2,7 @@ import { body, validationResult } from "express-validator";
 import User from "../models/user.model.js"
 
 export const signUpValidation = [
-    body('username').trim().isString().escape().withMessage("Username : Invalid Value"),
+    body('username').trim().isString().isLength({min : 3, max : 30}).escape().withMessage("Username : Invalid Value"),
 
     body('email').trim().isEmail().toLowerCase().escape().withMessage("Email : Invalid Value"),
 
@@ -34,4 +34,12 @@ export const signInValidation = [
     body('email').trim().isEmail().toLowerCase().escape().withMessage("Email : Invalid Value"),
 
     body('password').isString().isLength({min : 8}).withMessage('Password must have at least 8 characters'),
+]
+
+export const updateUserValidation = [
+    body('username').optional({nullable : true}).trim().isString().isLength({min : 3, max : 30}).escape().withMessage("Username : Invalid Value"),
+
+    body('email').optional({nullable : true}).trim().isEmail().toLowerCase().escape().withMessage("Email : Invalid Value"),
+
+    body('password').optional({nullable : true}).isString().isLength({min : 8}).withMessage('Password must have at least 8 characters'),
 ]

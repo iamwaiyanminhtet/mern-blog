@@ -2,6 +2,7 @@ import { Avatar, Button, Dropdown, Navbar } from 'flowbite-react';
 import { FaSun, FaMoon } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from 'react-router-dom';
 
 import logo from "../assets/w-letter.jpg"
 import { toggleDarkTheme } from "../redux/theme/theme.slice.js"
@@ -12,6 +13,7 @@ const NavBarComponent = () => {
     const { user } = useSelector(state => state.user)
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleSignout = async () => {
         try {
@@ -24,6 +26,7 @@ const NavBarComponent = () => {
             const data = await res.json();
             if (res.ok) {
                 dispatch(signOutSuccess());
+                navigate('/signin')
 
             } else {
                 console.log(data.message)
@@ -56,12 +59,22 @@ const NavBarComponent = () => {
                             label={
                                 <Avatar alt={user.username} img={user.pfp || user.defaultPfp} rounded bordered status='online' statusPosition='bottom-right' />
                             }
+                            className="z-50"
                         >
                             <Dropdown.Header>
                                 <span className="block text-sm">{user.username}</span>
                                 <span className="block truncate text-sm font-medium">{user.email}</span>
                             </Dropdown.Header>
-                            <Dropdown.Item>Dashboard</Dropdown.Item>
+                            <Link to='/dashboard?tab=main' >
+                                <Dropdown.Item>
+                                    Dashboard
+                                </Dropdown.Item>
+                            </Link>
+                            <Link to='/dashboard?tab=profile' >
+                                <Dropdown.Item>
+                                    Profile
+                                </Dropdown.Item>
+                            </Link>
                             <Dropdown.Divider />
                             <Dropdown.Item onClick={() => handleSignout()} >Sign out</Dropdown.Item>
                         </Dropdown>
