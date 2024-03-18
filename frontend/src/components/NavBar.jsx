@@ -5,12 +5,33 @@ import { useDispatch, useSelector } from "react-redux"
 
 import logo from "../assets/w-letter.jpg"
 import { toggleDarkTheme } from "../redux/theme/theme.slice.js"
+import {signOutSuccess} from "../redux/user/user.slice.js"
 
 const NavBarComponent = () => {
     const { curTheme } = useSelector(state => state.theme)
     const { user } = useSelector(state => state.user)
 
     const dispatch = useDispatch();
+
+    const handleSignout = async () => {
+        try {
+            const res = await fetch('/api/auth/signout', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: user._id })
+            })
+
+            const data = await res.json();
+            if (res.ok) {
+                dispatch(signOutSuccess());
+
+            } else {
+                console.log(data.message)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <Navbar fluid rounded className='border-b-2 dark:bg-inherit'>
@@ -25,11 +46,7 @@ const NavBarComponent = () => {
                     <Link className='hover:underline text-md' to='/'>Home</Link>
                     <Link className='hover:underline text-md'>Blogs</Link>
                 </div>
-                <button className='p-3 border-2 border-black dark:border-slate-100 hover:bg-black hover:dark:bg-slate-100 hover:text-slate-100 hover:dark:text-black rounded-full w-10 h-10 flex justify-center items-center' onClick={() => dispatch(toggleDarkTheme())}>
-                    {
-                        curTheme === "dark" ? <FaSun /> : <FaMoon />
-                    }
-                </button>
+               
 
                 {
                     user !== null ?
@@ -46,7 +63,7 @@ const NavBarComponent = () => {
                             </Dropdown.Header>
                             <Dropdown.Item>Dashboard</Dropdown.Item>
                             <Dropdown.Divider />
-                            <Dropdown.Item>Sign out</Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleSignout()} >Sign out</Dropdown.Item>
                         </Dropdown>
                         :
                         <Link to='/signin'>
@@ -55,7 +72,11 @@ const NavBarComponent = () => {
                             </Button>
                         </Link>
                 }
-
+                 <button className='text-lg p-3 border-2 border-black dark:border-slate-100 hover:bg-black hover:dark:bg-slate-100 hover:text-slate-100 hover:dark:text-black rounded-full  flex justify-center items-center' onClick={() => dispatch(toggleDarkTheme())}>
+                    {
+                        curTheme === "dark" ? <FaSun /> : <FaMoon />
+                    }
+                </button>
                 <Navbar.Toggle />
             </div>
             <Navbar.Collapse className='md:hidden'>

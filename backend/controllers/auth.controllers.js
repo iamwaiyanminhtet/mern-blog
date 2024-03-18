@@ -100,3 +100,13 @@ export const googleLogin = async (req, res, next) => {
     }
 
 }
+
+export const signout = async (req, res, next) => {
+    if(req.body.id) {
+        try {
+            res.status(200).clearCookie('access_token').json({message : "Signed out successfully"})
+        } catch (error) {
+            next(error)
+        }
+    }
+}
