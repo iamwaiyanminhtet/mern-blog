@@ -1,4 +1,5 @@
 import flowBite from "flowbite/plugin"
+import autoprefixer from "autoprefixer"
 
 export default {
   content: [
@@ -11,5 +12,6 @@ export default {
   },
   plugins: [
     flowBite,
+    autoprefixer,
   ],
 }

@@ -1,12 +1,9 @@
 import { validationResult } from "express-validator";
 import bcryptjs from "bcryptjs";
-import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
 
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/custom-error.js";
-
-dotenv.config();
+import { sendBackUserData } from "../utils/send-back-user-data.js";
 
 export const signUp = async (req, res, next) => {
     const { username, email, password, confirmPassword } = req.body;
@@ -65,15 +62,41 @@ export const signIn = async (req, res, next) => {
             return next(errorHandler(400, 'Wrong Credentials'));
         }
 
-        // create jwt token
-        const token = jwt.sign({id : isUser._id, isAdmin : isUser.isAdmin}, process.env.JWT_SECRET_KEY)
-
-        // remove password
-        const { password:pass , ...user } = isUser._doc;
+        const {token, user} = sendBackUserData(isUser)
 
         res.status(200).cookie('access_token', token, {httpOnly : true}).json(user);
 
     } catch (error) {
         next(error);
     }
+}
+
+export const googleLogin = async (req, res, next) => {
+    const {username, email, googlePfp } = req.body
+
+    try {
+        const isUser = await User.findOne({email : email.toLowerCase()})
+
+        if(isUser) {
+            const {token, user} = sendBackUserData(isUser);
+            res.status(200).cookie('access_token', token, {httpOnly : true}).json(user);
+        } else {
+            const randomPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+
+            const hashPassword = bcryptjs.hashSync(randomPassword, 10)
+
+            const newUser = await User.create({
+                username : username.trim(),
+                email : email.toLowerCase(),
+                password : hashPassword,
+                pfp : googlePfp 
+            })
+
+            const {token, user} = sendBackUserData(newUser);
+            res.status(200).cookie('access_token', token, {httpOnly : true}).json(user);
+        }
+    } catch (error) {
+        next(error)
+    }
+
 }

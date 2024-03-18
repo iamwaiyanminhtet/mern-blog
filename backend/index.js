@@ -18,7 +18,7 @@ app.listen(PORT, () => {
 // db connection
 mongoose.connect(process.env.MONGODB_CONNECTION)
 .then(() => console.log('connected to the db'))
-.catch(() => console.log(error))
+.catch((error) => console.log(error))
 
 // express config
 app.use(express.json());

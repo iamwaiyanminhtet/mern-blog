@@ -5,3 +5,8 @@
 .page-min-height-without-navbar {
     min-height: calc(100vh - 80px);
 }
+
+.bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+}

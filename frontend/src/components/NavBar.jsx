@@ -8,17 +8,17 @@ import { toggleDarkTheme } from "../redux/theme/theme.slice.js"
 
 const NavBarComponent = () => {
     const { curTheme } = useSelector(state => state.theme)
-    const {user} = useSelector(state => state.user)
+    const { user } = useSelector(state => state.user)
 
     const dispatch = useDispatch();
 
     return (
         <Navbar fluid rounded className='border-b-2 dark:bg-inherit'>
             <Navbar.Brand as={'div'}>
-               <Link className='flex' to='/'>
+                <Link className='flex' to='/'>
                     <img src={logo} className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
-                    <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">WYT</span>
-               </Link>
+                    <span className="self-center whitespace-nowrap text-2xl font-semibold  dark:text-slate-100">WYT</span>
+                </Link>
             </Navbar.Brand>
             <div className="flex md:order-2 gap-3 sm:gap-8  items-center">
                 <div className='hidden sm:flex gap-5'>
@@ -32,30 +32,30 @@ const NavBarComponent = () => {
                 </button>
 
                 {
-                    user !== null ? 
-                    <Dropdown
-                    arrowIcon={false}
-                    inline
-                    label={
-                        <Avatar alt={user.username} img={user.pfp || user.defaultPfp} rounded status='online' statusPosition='top-right' />
-                    }
-                >
-                    <Dropdown.Header>
-                        <span className="block text-sm">{user.username}</span>
-                        <span className="block truncate text-sm font-medium">{user.email}</span>
-                    </Dropdown.Header>
-                    <Dropdown.Item>Dashboard</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item>Sign out</Dropdown.Item>
-                </Dropdown>
-                    :
-                    <Link to='/signin'>
-                        <Button gradientDuoTone="greenToBlue" outline className='dark:bg-inherit'> 
-                            Sign In
-                        </Button>
-                    </Link>
-                }    
-               
+                    user !== null ?
+                        <Dropdown
+                            arrowIcon={false}
+                            inline
+                            label={
+                                <Avatar alt={user.username} img={user.pfp || user.defaultPfp} rounded bordered status='online' statusPosition='bottom-right' />
+                            }
+                        >
+                            <Dropdown.Header>
+                                <span className="block text-sm">{user.username}</span>
+                                <span className="block truncate text-sm font-medium">{user.email}</span>
+                            </Dropdown.Header>
+                            <Dropdown.Item>Dashboard</Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item>Sign out</Dropdown.Item>
+                        </Dropdown>
+                        :
+                        <Link to='/signin'>
+                            <Button gradientDuoTone="greenToBlue" outline className='dark:bg-inherit'>
+                                Sign In
+                            </Button>
+                        </Link>
+                }
+
                 <Navbar.Toggle />
             </div>
             <Navbar.Collapse className='md:hidden'>
