@@ -2,7 +2,7 @@
 import { useNavigate, Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react";
-import { Avatar, Breadcrumb, Table, Badge, Modal, Button, Toast } from "flowbite-react"
+import { Avatar, Breadcrumb, Table, Badge, Modal, Button, Toast, Label, Select } from "flowbite-react"
 import { HiHome, HiOutlineExclamationCircle, HiCheck } from "react-icons/hi";
 import { FaTrash } from "react-icons/fa";
 
@@ -12,6 +12,7 @@ const DashUsers = () => {
 
     // fetch user data state
     const [usersData, setUsersData] = useState([]);
+    const [usersDataCopy, setUsersDataCopy] = useState(null);
     const [usersDataLoading, setUsersDataLoading] = useState(false);
     const [showMore, setShowMore] = useState(true);
     const [modal, setModal] = useState(false)
@@ -32,6 +33,7 @@ const DashUsers = () => {
             const data = await res.json();
             if (res.ok) {
                 setUsersData(data.users)
+                setUsersDataCopy(data.users)
                 setUsersDataLoading(false)
                 if (data.users.length < 9) {
                     setShowMore(false)
@@ -55,17 +57,31 @@ const DashUsers = () => {
             console.log(data.message)
         }
         if (res.ok) {
-            setUsersData(prev => prev.filter(user => user._id !== userIdToDelete))
+            const curUsersData = [...usersData].filter(user => user._id !== userIdToDelete)
+            setUsersData(curUsersData)
+            setUsersDataCopy(curUsersData)
             setUserIdToDelete(null)
             setDeleteUserSuccess(true)
             setModal(false)
         }
     }
 
+    const handleSelectChange = (e) => {
+        if(e.target.value === 'all') {
+            setUsersData(usersDataCopy)
+        }
+        if(e.target.value === 'admin') {
+            setUsersData([...usersDataCopy].filter(user => user.isAdmin))
+        }
+        if(e.target.value === 'user') {
+            setUsersData([...usersDataCopy].filter(user => user.isAdmin === false))
+        }
+    }
+
     return (
         <>
             <div className="sm:ps-3 mt-3 sm:mt-0 w-full overflow-x-auto">
-                <Breadcrumb aria-label="Solid background breadcrumb example" className="bg-gray-50 px-5 py-3 dark:bg-gray-800">
+                <Breadcrumb aria-label="Solid background breadcrumb example" className="bg-gray-50 px-5 py-3 dark:bg-gray-800 mb-3">
                     <Link to='/'>
                         <Breadcrumb.Item icon={HiHome} as={'div'} >
                             Home
@@ -76,18 +92,28 @@ const DashUsers = () => {
                     </Breadcrumb.Item>
                 </Breadcrumb>
 
-                {
-                    deleteUserSuccess &&
-                    <Toast className="mt-2 min-w-fit">
-                        <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                            <HiCheck className="h-5 w-5" />
-                        </div>
-                        <div className="ml-3 text-sm font-normal">
-                            User has been deleted successfully.
-                        </div>
-                        <Toast.Toggle />
-                    </Toast>
-                }
+                <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-3 sm:mt-0   ${deleteUserSuccess ? 'justify-between' : 'justify-end'}`} >
+                    {
+                        deleteUserSuccess &&
+                        <Toast className="mt-2 min-w-fit">
+                            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                                <HiCheck className="h-5 w-5" />
+                            </div>
+                            <div className="ml-3 text-sm font-normal">
+                                User has been deleted successfully.
+                            </div>
+                            <Toast.Toggle />
+                        </Toast>
+                    }
+
+                    <div className="max-w-md">
+                        <Select id="countries" onChange={handleSelectChange} >
+                            <option value='all' >All</option>
+                            <option value='admin' >Admin</option>
+                            <option value='user' >User</option>
+                        </Select>
+                    </div>
+                </div>
 
                 {/* table data */}
                 <div className="overflow-x-auto mt-5">
