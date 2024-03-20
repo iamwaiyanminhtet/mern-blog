@@ -10,3 +10,7 @@
     -webkit-background-clip: text;
     background-clip: text;
 }
+
+.ql-editor {
+    font-size: 1.2rem;
+}

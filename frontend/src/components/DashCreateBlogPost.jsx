@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useSelector, useDispatch } from "react-redux"
-import { Avatar, Breadcrumb, Card, FileInput, Label, FloatingLabel, Button, Progress, Toast, Spinner, Select } from 'flowbite-react'
+import { useSelector } from "react-redux"
+import { Breadcrumb, Card, FileInput, FloatingLabel, Button, Progress, Toast, Spinner, Select } from 'flowbite-react'
 import { HiHome, HiExclamation, HiCheck } from 'react-icons/hi';
 import { BiSolidUpArrowSquare } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { ref, getStorage, uploadBytesResumable, getDownloadURL, } from "firebase/storage"
 import { Link, useNavigate } from "react-router-dom";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 
 const DashCreateBlogPost = () => {
@@ -119,7 +121,6 @@ const DashCreateBlogPost = () => {
         setCreateBlogLoading(true)
         setCreateBlogError(null)
 
-        console.log({ ...formData, userId: curUser._id })
         if (!formData.title || !formData.content || !formData.categoryId) {
             setCreateBlogError('All Fileds are required.')
             setCreateBlogLoading(false)
@@ -248,7 +249,9 @@ const DashCreateBlogPost = () => {
                                     </Button>
                                 </div>
                                 <FloatingLabel variant="outlined" label="title" id="title" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} />
-                                <FloatingLabel variant="outlined" label="content" id="content" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} />
+
+                                <ReactQuill theme="snow" onChange={(value) => setFormData({ ...formData, content: value })} className="h-72 mb-12" id="content" />
+
                                 <Select id="categoryId" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} required >
                                     {
                                         categories.map(category =>
