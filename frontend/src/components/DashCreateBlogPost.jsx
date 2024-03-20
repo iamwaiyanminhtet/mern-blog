@@ -48,7 +48,7 @@ const DashCreateBlogPost = () => {
             setCategories(data)
         }
         fetchCategories()
-    })
+    }, [curUser._id])
 
     // handle file input change locally
     const handleImgChange = (e) => {

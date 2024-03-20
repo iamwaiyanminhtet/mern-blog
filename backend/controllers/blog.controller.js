@@ -66,3 +66,43 @@ export const createBlog = async (req, res, next) => {
         next(error)
     }
 }
+
+export const getBlogs = async (req, res, next) => {
+    try {
+        const startIndex = parseInt(req.query.startIndex || 0)
+        const limit = parseInt(req.query.limit || 5)
+        const sorting = req.query.sorting === "asc" ? 1 : -1;
+
+        const blogs = await Blog.find({
+            ...(req.query.userId && { userId : req.query.userId }),
+            ...(req.query.categoryId && { category : req.query.categoryId }),
+            ...(req.query.slug && { slug : req.query.slug }),
+            ...(req.query.searchTerm && {
+                $or : [
+                    {title : {$regex : req.query.searchTerm, $options : "i"}},
+                    {content : {$regex : req.query.searchTerm, $options : "i"}},
+                ]
+            }),
+        }).sort({updatedAt : sorting}).skip(startIndex).limit(limit).populate(['userId', 'categoryId']);
+
+        const totalBlogs = await Blog.countDocuments();
+
+        const now = new Date();
+
+        const oneMonthAgo = new Date(
+            now.getFullYear(),
+            now.getMonth() - 1,
+            now.getDate()
+          );
+      
+        const lastMonthBlogs = await Blog.countDocuments({createdAt : { $gte : oneMonthAgo }})
+
+        res.status(200).json({
+            blogs,
+            totalBlogs,
+            lastMonthBlogs,
+        })
+    } catch (error) {
+        next(error)
+    }
+}
