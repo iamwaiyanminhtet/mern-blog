@@ -62,6 +62,14 @@ const DashSidebar = () => {
                             </Sidebar.Item>
                         </Link>
                     }
+                     {
+                        user.isAdmin &&
+                        <Link to='/dashboard?tab=blogs'>
+                            <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "blogs"} >
+                                Blogs
+                            </Sidebar.Item>
+                        </Link>
+                    }
                 </Sidebar.ItemGroup>
                 <Sidebar.ItemGroup>
                     <Sidebar.Item icon={RiLogoutBoxRFill} as={'div'} onClick={() => handleSignout()} >

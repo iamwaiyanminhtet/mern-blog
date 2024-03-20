@@ -2,7 +2,7 @@
 import { useNavigate, Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react";
-import { Avatar, Breadcrumb, Table, Badge, Modal, Button, Toast, Label, Select } from "flowbite-react"
+import { Avatar, Breadcrumb, Table, Badge, Modal, Button, Toast, Select } from "flowbite-react"
 import { HiHome, HiOutlineExclamationCircle, HiCheck } from "react-icons/hi";
 import { FaTrash } from "react-icons/fa";
 
@@ -67,13 +67,13 @@ const DashUsers = () => {
     }
 
     const handleSelectChange = (e) => {
-        if(e.target.value === 'all') {
+        if (e.target.value === 'all') {
             setUsersData(usersDataCopy)
         }
-        if(e.target.value === 'admin') {
+        if (e.target.value === 'admin') {
             setUsersData([...usersDataCopy].filter(user => user.isAdmin))
         }
-        if(e.target.value === 'user') {
+        if (e.target.value === 'user') {
             setUsersData([...usersDataCopy].filter(user => user.isAdmin === false))
         }
     }
@@ -106,13 +106,16 @@ const DashUsers = () => {
                         </Toast>
                     }
 
-                    <div className="max-w-md">
-                        <Select id="countries" onChange={handleSelectChange} >
-                            <option value='all' >All</option>
-                            <option value='admin' >Admin</option>
-                            <option value='user' >User</option>
-                        </Select>
-                    </div>
+                    {
+                        !usersDataLoading &&
+                        <div className="max-w-md">
+                            <Select id="countries" onChange={handleSelectChange} >
+                                <option value='all' >All</option>
+                                <option value='admin' >Admin</option>
+                                <option value='user' >User</option>
+                            </Select>
+                        </div>
+                    }
                 </div>
 
                 {/* table data */}

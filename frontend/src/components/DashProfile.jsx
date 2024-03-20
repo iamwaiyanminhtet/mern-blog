@@ -268,7 +268,7 @@ const DashProfile = () => {
                 <FloatingLabel variant="outlined" label="username" id="username" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} defaultValue={user.username} />
                 <FloatingLabel variant="outlined" label="email" id="email" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} defaultValue={user.email} />
                 <FloatingLabel variant="outlined" label="password" id="password" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} type="password" />
-                <Button gradientDuoTone="greenToBlue" className="text-black" type="button" >
+                <Button gradientDuoTone="greenToBlue" className="text-black" type="submit" >
                   {
                     updateUserLoading ?
                       <>
