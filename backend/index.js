@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import blogRoutes from "./routes/blog.routes.js";
 import mongoose from "mongoose";
 
 const app = express();
@@ -28,6 +29,7 @@ app.use(cookieParser());
 // routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/blog', blogRoutes);
 
 // last error middleware
 app.use((err, req, res, next) => {

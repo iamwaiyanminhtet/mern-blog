@@ -1,6 +1,7 @@
 import { body, validationResult } from "express-validator";
 import User from "../models/user.model.js"
 
+// user validations
 export const signUpValidation = [
     body('username').trim().isString().isLength({min : 3, max : 30}).escape().withMessage("Username : Invalid Value"),
 
@@ -42,4 +43,15 @@ export const updateUserValidation = [
     body('email').optional({nullable : true}).trim().isEmail().toLowerCase().escape().withMessage("Email : Invalid Value"),
 
     body('password').optional({nullable : true}).isString().isLength({min : 8}).withMessage('Password must have at least 8 characters'),
+]
+
+// blog validations
+export const createBlogValidation = [
+    body('title').trim().isString().escape().withMessage("Title : Invalid Value"),
+
+    body('content').trim().isString().escape().withMessage("Content : Invalid Value"),
+
+    body('categoryId').isMongoId().withMessage("Category : Invalid Value"),
+
+    body('userId').isMongoId().withMessage("UserId : Invalid Value")
 ]
