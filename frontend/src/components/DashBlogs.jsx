@@ -249,7 +249,7 @@ const DashBlogs = () => {
 
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          <Link to={'/'}>
+                          <Link to={`/blogs/${blog.slug}`}>
                             {blog.title}
                           </Link>
                         </Table.Cell>

@@ -14,7 +14,8 @@ const blogSchema = mongoose.Schema({
         default : "https://soliloquywp.com/wp-content/uploads/2016/08/How-to-Set-a-Default-Featured-Image-in-WordPress.png"
     },
     slug : {
-        type : String
+        type : String,
+        unique : true
     },
     userId : {
         type : Schema.Types.ObjectId,

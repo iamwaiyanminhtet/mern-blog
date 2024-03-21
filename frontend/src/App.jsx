@@ -8,6 +8,7 @@ import DashboardProtect from "./private/DashboardProtect";
 import Dashboard from "./pages/Dashboard";
 import DashboardAdminProtected from "./private/DashboardAdminProtected" 
 import DashUpdateBlog from "./components/DashUpdateBlog";
+import Blog from "./pages/Blog";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route element={<DashboardAdminProtected/>} >
             <Route path="/update-blog/:blogId" element={<DashUpdateBlog/>} />
           </Route>
+          <Route path="/blogs/:blogSlug" element={<Blog/>} />
         </Routes>
       </BrowserRouter>
     </>
