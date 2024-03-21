@@ -9,6 +9,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DashSidebar from "./DashSidebar";
+import EditorToolbar from "../react-quill/EditorToobar";
+import { modules, formats } from "../react-quill/EditorToobar.jsx";
 
 const DashUpdateBlog = () => {
     const { user: curUser } = useSelector(state => state.user)
@@ -296,8 +298,6 @@ const DashUpdateBlog = () => {
                                     </div>
                                     <FloatingLabel variant="outlined" label="title" id="title" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} value={formData.title || ''} />
 
-                                    <ReactQuill theme="snow" onChange={(value) => setFormData({ ...formData, content: value })} className="h-72 mb-12" id="content" value={formData.content || ''} />
-
                                     <Select id="categoryId" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} required  >
                                         <option value="choose" >Choose a category to select</option>
                                         {
@@ -308,6 +308,14 @@ const DashUpdateBlog = () => {
                                             )
                                         }
                                     </Select>
+
+                                   <div className="text-editor">
+                                    <EditorToolbar/>
+                                   <ReactQuill theme="snow" onChange={(value) => setFormData({ ...formData, content: value })} className="h-72 mb-12" id="content" value={formData.content || ''}  modules={modules}
+                                        formats={formats} />
+                                   </div>
+
+                                    
                                     <Button gradientDuoTone="greenToBlue" className="text-black" type="submit" >
                                         {
                                             updateBlogLoading ?

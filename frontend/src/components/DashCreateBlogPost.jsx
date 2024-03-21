@@ -8,6 +8,8 @@ import { ref, getStorage, uploadBytesResumable, getDownloadURL, } from "firebase
 import { Link, useNavigate } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import EditorToolbar from "../react-quill/EditorToobar";
+import { modules, formats } from "../react-quill/EditorToobar.jsx";
 
 
 const DashCreateBlogPost = () => {
@@ -15,9 +17,9 @@ const DashCreateBlogPost = () => {
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        title : '',
-        content : '',
-        categoryId : ''
+        title: '',
+        content: '',
+        categoryId: ''
     });
     const [categories, setCategories] = useState([])
 
@@ -140,7 +142,7 @@ const DashCreateBlogPost = () => {
             const res = await fetch(`/api/blog/create-blog`, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({...formData, userId : curUser._id})
+                body: JSON.stringify({ ...formData, userId: curUser._id })
             })
 
             const data = await res.json();
@@ -156,8 +158,8 @@ const DashCreateBlogPost = () => {
                 setCreateBlogSuccess('New blog has created.')
                 setCreateBlogLoading(false)
                 setFormData({
-                    title : '',
-                    content : ''
+                    title: '',
+                    content: ''
                 })
             } {
                 setCreateBlogError(data.message)
@@ -256,11 +258,9 @@ const DashCreateBlogPost = () => {
                                         <BiSolidUpArrowSquare /> <span className="ms-2">Create Image</span>
                                     </Button>
                                 </div>
-                                <FloatingLabel variant="outlined" label="title" id="title" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })}   value={formData.title}/>
+                                <FloatingLabel variant="outlined" label="title" id="title" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} value={formData.title} />
 
-                                <ReactQuill theme="snow" onChange={(value) => setFormData({ ...formData, content: value })} className="h-72 mb-12" id="content"  value={formData.content} />
-
-                                <Select id="categoryId" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} required  value={formData.categoryId} >
+                                <Select id="categoryId" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} required value={formData.categoryId} >
                                     <option value="choose" >Choose a category to select</option>
                                     {
                                         categories.map(category =>
@@ -270,6 +270,14 @@ const DashCreateBlogPost = () => {
                                         )
                                     }
                                 </Select>
+
+                                <div className="text-editor" >
+                                    <EditorToolbar />
+                                    <ReactQuill theme="snow" onChange={(value) => setFormData({ ...formData, content: value })} className="h-72 mb-12" id="content" value={formData.content} modules={modules}
+                                        formats={formats} />
+                                </div>
+
+
                                 <Button gradientDuoTone="greenToBlue" className="text-black" type="submit" >
                                     {
                                         createBlogLoading ?
@@ -290,7 +298,7 @@ const DashCreateBlogPost = () => {
 
         </div>
 
-        
+
     )
 }
 
