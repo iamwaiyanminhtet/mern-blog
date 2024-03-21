@@ -14,7 +14,11 @@ const DashCreateBlogPost = () => {
     const { user: curUser } = useSelector(state => state.user)
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        title : '',
+        content : '',
+        categoryId : ''
+    });
     const [categories, setCategories] = useState([])
 
     // upload file input locally
@@ -121,7 +125,7 @@ const DashCreateBlogPost = () => {
         setCreateBlogLoading(true)
         setCreateBlogError(null)
 
-        if (!formData.title || !formData.content || !formData.categoryId) {
+        if (!formData.title || !formData.content || !formData.categoryId || formData.categoryId === "choose") {
             setCreateBlogError('All Fileds are required.')
             setCreateBlogLoading(false)
             return;
@@ -151,6 +155,10 @@ const DashCreateBlogPost = () => {
             if (res.ok) {
                 setCreateBlogSuccess('New blog has created.')
                 setCreateBlogLoading(false)
+                setFormData({
+                    title : '',
+                    content : ''
+                })
             } {
                 setCreateBlogError(data.message)
                 setCreateBlogLoading(false)
@@ -248,11 +256,12 @@ const DashCreateBlogPost = () => {
                                         <BiSolidUpArrowSquare /> <span className="ms-2">Create Image</span>
                                     </Button>
                                 </div>
-                                <FloatingLabel variant="outlined" label="title" id="title" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} />
+                                <FloatingLabel variant="outlined" label="title" id="title" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })}   value={formData.title}/>
 
-                                <ReactQuill theme="snow" onChange={(value) => setFormData({ ...formData, content: value })} className="h-72 mb-12" id="content" />
+                                <ReactQuill theme="snow" onChange={(value) => setFormData({ ...formData, content: value })} className="h-72 mb-12" id="content"  value={formData.content} />
 
-                                <Select id="categoryId" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} required >
+                                <Select id="categoryId" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} required  value={formData.categoryId} >
+                                    <option value="choose" >Choose a category to select</option>
                                     {
                                         categories.map(category =>
                                             <option key={category._id} value={category._id} >

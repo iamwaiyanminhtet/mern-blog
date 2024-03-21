@@ -47,7 +47,7 @@ const DashBlogs = () => {
         setBlogsData(data.blogs)
         setBlogsDataCopy(data.blogs)
         setBlogsDataLoading(false)
-        if (data.blogs.length < 9) {
+        if (data.blogs.length < 5) {
           setShowMore(false)
         }
       }
@@ -79,11 +79,25 @@ const DashBlogs = () => {
   }
 
   const handleSelectChange = (e) => {
-    if(e.target.value === "all") {
+    if (e.target.value === "all") {
       setBlogsData(blogsDataCopy);
       return;
     } else {
       setBlogsData([...blogsDataCopy].filter(blog => blog.categoryId._id === e.target.value))
+    }
+  }
+
+  const handleShowMore = async () => {
+    const startIndex = blogsData.length
+    const res = await fetch(`/api/blog/get-blogs?startIndex=${startIndex}`)
+    const data = await res.json();
+
+    if (res.ok) {
+      setBlogsData([...blogsData, ...data.blogs])
+      setBlogsDataCopy([...blogsData, ...data.blogs])
+      if (data.blogs.length < 5) {
+        setShowMore(false)
+      }
     }
   }
 
@@ -103,9 +117,9 @@ const DashBlogs = () => {
 
         <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-3 sm:mt-0   ${blogIdToDelete ? 'justify-between' : 'justify-end'}`} >
           <Link to='/dashboard?tab=create-blog'>
-          <Button className="" color="info" >
-            Create
-          </Button>
+            <Button className="" color="info" >
+              Create
+            </Button>
           </Link>
           {
             deleteBlogSuccess &&
@@ -238,6 +252,10 @@ const DashBlogs = () => {
                   }
                 </Table.Body>
               </Table>
+              {
+                showMore &&
+                <p className="text-blue-500 mt-3 text-center hover:text-blue-400 cursor-pointer" onClick={() => handleShowMore()} >Show more</p>
+              }
               <Modal show={modal} size="md" onClose={() => setModal(false)} popup>
                 <Modal.Header />
                 <Modal.Body>

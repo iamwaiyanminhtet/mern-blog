@@ -35,7 +35,8 @@ const DashUsers = () => {
                 setUsersData(data.users)
                 setUsersDataCopy(data.users)
                 setUsersDataLoading(false)
-                if (data.users.length < 9) {
+                console.log(data)
+                if (data.users.length < 5 ) {
                     setShowMore(false)
                 }
             }
@@ -75,6 +76,20 @@ const DashUsers = () => {
         }
         if (e.target.value === 'user') {
             setUsersData([...usersDataCopy].filter(user => user.isAdmin === false))
+        }
+    }
+
+    const handleShowMore = async () => {
+        const startIndex = usersData.length
+        const res = await fetch(`/api/user/get-users?startIndex=${startIndex}`)
+        const data = await res.json();
+  
+        if (res.ok) {
+            setUsersData([...usersData, ...data.users])
+            setUsersDataCopy([...usersData, ...data.users])
+            if (data.users.length < 5) {
+                setShowMore(false)
+            }
         }
     }
 
@@ -205,12 +220,12 @@ const DashUsers = () => {
                                                     {
                                                         user._id === curUser._id ?
                                                             <></> :
-                                                            <span className="text-red-500" onClick={() => {
+                                                            <span  onClick={() => {
                                                                 setModal(true)
                                                                 setUserIdToDelete(user._id)
                                                                 setDeleteUserSuccess(false)
                                                             }} >
-                                                                <FaTrash />
+                                                                <FaTrash className="text-red-500 hover:text-red-400" />
                                                             </span>
                                                     }
                                                 </Table.Cell>
@@ -219,6 +234,10 @@ const DashUsers = () => {
                                     }
                                 </Table.Body>
                             </Table>
+                            {
+                                showMore && 
+                                <p className="text-blue-500 mt-3 text-center hover:text-blue-400 cursor-pointer" onClick={() => handleShowMore()} >Show more</p>
+                            }
                             <Modal show={modal} size="md" onClose={() => setModal(false)} popup>
                                 <Modal.Header />
                                 <Modal.Body>
