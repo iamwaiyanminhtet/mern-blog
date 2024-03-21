@@ -223,7 +223,9 @@ const DashBlogs = () => {
 
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {blog.title}
+                          <Link to={'/'}>
+                            {blog.title}
+                          </Link>
                         </Table.Cell>
                         <Table.Cell>
                           {blog.categoryId.category}
@@ -232,7 +234,9 @@ const DashBlogs = () => {
                           {blog.userId.username}
                         </Table.Cell>
                         <Table.Cell>
-                          <span className="text-blue-400 hover:underline hover:cursor-pointer">Edit</span>
+                          <Link to={`/update-blog/${blog._id}`} >
+                            <span className="text-blue-400 hover:underline hover:cursor-pointer">Edit</span>
+                          </Link>
                         </Table.Cell>
                         <Table.Cell>
                           {

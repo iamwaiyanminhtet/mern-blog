@@ -56,8 +56,8 @@ export const updateUser = async (req, res, next) => {
 
     const curUser = await User.findOne({_id : req.params.userId})
 
-    if(username === curUser.username || email === curUser.email) {
-        return next(errorHandler(404, 'No Change has made.'));
+    if(username === curUser.username && email === curUser.email) {
+        return next(errorHandler(400, 'No Change has made.'));
     }
 
     // validate signup data with express-validator

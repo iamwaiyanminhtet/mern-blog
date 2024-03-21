@@ -49,9 +49,17 @@ export const updateUserValidation = [
 export const createBlogValidation = [
     body('title').trim().isString().escape().withMessage("Title : Invalid Value"),
 
-    body('content').trim().isString().escape().withMessage("Content : Invalid Value"),
+    body('content').trim().isString().withMessage("Content : Invalid Value"),
 
     body('categoryId').isMongoId().withMessage("Category : Invalid Value"),
 
     body('userId').isMongoId().withMessage("UserId : Invalid Value")
+]
+
+export const updateBlogValidation = [
+    body('title').optional({nullable : true}).trim().isString().escape().withMessage("Title : Invalid Value"),
+
+    body('content').optional({nullable : true}).trim().isString().withMessage("Content : Invalid Value"),
+
+    body('categoryId').optional({nullable : true}).isMongoId().withMessage("Category : Invalid Value"),
 ]

@@ -76,6 +76,7 @@ export const getBlogs = async (req, res, next) => {
         const blogs = await Blog.find({
             ...(req.query.userId && { userId : req.query.userId }),
             ...(req.query.categoryId && { category : req.query.categoryId }),
+            ...(req.query.blogId && { _id : req.query.blogId }),
             ...(req.query.slug && { slug : req.query.slug }),
             ...(req.query.searchTerm && {
                 $or : [
@@ -102,6 +103,43 @@ export const getBlogs = async (req, res, next) => {
             totalBlogs,
             lastMonthBlogs,
         })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updateBlog = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+        return next(errorHandler(403, 'You are not allowed to update this blog'));
+    }
+
+    const {title, content, categoryId, image} = req.body
+
+    const curBlog = await Blog.findOne({_id : req.params.blogId})
+
+    if(title === curBlog.title && content === curBlog.content && categoryId === curBlog.categoryId) {
+        return next(errorHandler(400, 'No Change has made.'));
+    }
+
+    // validate signup data with express-validator
+    const validationError = validationResult(req);
+    if (!validationError.isEmpty()) {
+        next(errorHandler(400, validationError.errors[0].msg));
+    }
+
+    try {
+        const updatedBlog = await Blog.findByIdAndUpdate(
+            req.params.blogId,
+            {
+                $set: {
+                    title,
+                    content,
+                    categoryId,
+                    image,
+                }
+            }, { new: true }
+        )
+        res.status(200).json(updatedBlog);
     } catch (error) {
         next(error)
     }
