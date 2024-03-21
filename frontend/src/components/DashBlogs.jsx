@@ -2,7 +2,8 @@
 import { useNavigate, Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react";
-import { Avatar, Breadcrumb, Table, Badge, Modal, Button, Toast, Select } from "flowbite-react"
+import { Avatar, Breadcrumb, Table, Modal, Button, Toast, Select } from "flowbite-react"
+import { getStorage, ref, deleteObject } from "firebase/storage"
 import { HiHome, HiOutlineExclamationCircle, HiCheck } from "react-icons/hi";
 import { FaTrash } from "react-icons/fa";
 
@@ -18,6 +19,7 @@ const DashBlogs = () => {
   const [showMore, setShowMore] = useState(true);
   const [modal, setModal] = useState(false)
   const [blogIdToDelete, setBlogIdToDelete] = useState(null);
+  const [blogImgToDelete, setBlogImgToDelete] = useState(null);
   const [deleteBlogSuccess, setDeleteBlogSuccess] = useState(false);
 
   // check if admin or not
@@ -58,7 +60,12 @@ const DashBlogs = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curUser._id])
 
-  const handleDeleteUser = async () => {
+  const handleDeleteBlog = async () => {
+
+    if (blogImgToDelete.includes('firebasestorage.googleapis.com')) {
+      deleteImgFromFirebase(blogImgToDelete)
+    }
+
     const res = await fetch(`/api/blog/delete/${blogIdToDelete}`, {
       method: "DELETE",
       headers: { 'Content-Type': 'application/json' }
@@ -101,6 +108,21 @@ const DashBlogs = () => {
     }
   }
 
+  // delete img from firebase
+  const deleteImgFromFirebase = (imageUrl) => {
+    const storage = getStorage();
+
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, imageUrl);
+
+    // Delete the file
+    deleteObject(desertRef).then(() => {
+      console.log('file deleted')
+    }).catch((error) => {
+      console.log(error)
+    });
+  }
+
   return (
     <>
       <div className="sm:ps-3 mt-3 sm:mt-0 w-full overflow-x-auto">
@@ -115,12 +137,8 @@ const DashBlogs = () => {
           </Breadcrumb.Item>
         </Breadcrumb>
 
-        <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-3 sm:mt-0   ${blogIdToDelete ? 'justify-between' : 'justify-end'}`} >
-          <Link to='/dashboard?tab=create-blog'>
-            <Button className="" color="info" >
-              Create
-            </Button>
-          </Link>
+        <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-3 sm:mt-0   ${deleteBlogSuccess ? 'justify-between' : 'justify-end'}`} >
+
           {
             deleteBlogSuccess &&
             <Toast className="mt-2 min-w-fit">
@@ -134,19 +152,27 @@ const DashBlogs = () => {
             </Toast>
           }
 
-          {
-            !blogsDataLoading &&
-            <div className="max-w-md">
-              <Select id="categoryId" onChange={handleSelectChange} >
-                <option value="all">All</option>
-                {
-                  categories.map(category =>
-                    <option key={category._id} defaultValue={category._id} value={category._id} >{category.category}</option>
-                  )
-                }
-              </Select>
-            </div>
-          }
+          <div className="flex flex-col sm:flex-row gap-2" >
+            <Link to='/dashboard?tab=create-blog'>
+              <Button className="" color="info" >
+                Create
+              </Button>
+            </Link>
+
+            {
+              !blogsDataLoading &&
+              <div className="max-w-md">
+                <Select id="categoryId" onChange={handleSelectChange} >
+                  <option value="all">All</option>
+                  {
+                    categories.map(category =>
+                      <option key={category._id} defaultValue={category._id} value={category._id} >{category.category}</option>
+                    )
+                  }
+                </Select>
+              </div>
+            }
+          </div>
         </div>
 
         {/* table data */}
@@ -245,6 +271,7 @@ const DashBlogs = () => {
                               <span className="text-red-500" onClick={() => {
                                 setModal(true)
                                 setBlogIdToDelete(blog._id)
+                                setBlogImgToDelete(blog.image)
                                 setDeleteBlogSuccess(false)
                               }} >
                                 <FaTrash />
@@ -266,10 +293,10 @@ const DashBlogs = () => {
                   <div className="text-center">
                     <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
                     <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                      Are you sure you want to delete this account?
+                      Are you sure you want to delete this blog?
                     </h3>
                     <div className="flex justify-center gap-4">
-                      <Button color="failure" onClick={() => handleDeleteUser()}>
+                      <Button color="failure" onClick={() => handleDeleteBlog()}>
                         {"Yes, I'm sure"}
                       </Button>
                       <Button color="gray" onClick={() => setModal(false)}>

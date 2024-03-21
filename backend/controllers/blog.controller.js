@@ -144,3 +144,21 @@ export const updateBlog = async (req, res, next) => {
         next(error)
     }
 }
+
+export const deleteBlog = async (req, res, next) => {
+    try {
+        const blogToDelete = await Blog.findById(req.params.blogId);
+        if (!blogToDelete) {
+            return next(errorHandler(404, 'Blog not found'));
+        }
+
+        if (req.user.isAdmin) {
+            await Blog.findByIdAndDelete(req.params.blogId);
+            return res.status(200).json({ message: "Blog has been deleted!" });
+        } else {
+            return next(errorHandler(403, 'You are not allowed to delete this blog'));
+        }
+    } catch (error) {
+        next(error);
+    }
+}
