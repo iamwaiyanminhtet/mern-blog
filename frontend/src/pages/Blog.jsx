@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import htmlReactParser from "html-react-parser"
 import CommentSection from "../components/CommentSection";
+import { HiExclamation } from 'react-icons/hi'
+import { Toast } from "flowbite-react";
 
 const Blog = () => {
     const { blogSlug } = useParams();
@@ -42,6 +44,18 @@ const Blog = () => {
 
     return (
         <>
+            {
+                blogError &&
+                <Toast className="mt-2 min-w-fit">
+                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
+                        <HiExclamation className="h-5 w-5" />
+                    </div>
+                    <div className="ml-3 text-sm font-normal sm:text-nowrap">
+                        {blogError}
+                    </div>
+                    <Toast.Toggle />
+                </Toast>
+            }
             {
                 blogLoading &&
                 <div className="max-w-2xl px-6 py-16 mx-auto space-y-12" >
@@ -121,7 +135,7 @@ const Blog = () => {
                             </ul>
                         </div>
                     </div>
-                    <CommentSection blog={blog} />
+                    <CommentSection blogId={blog._id} />
                 </div>
             }
         </>

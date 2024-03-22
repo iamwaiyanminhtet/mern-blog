@@ -39,7 +39,13 @@ export const getComment = async (req, res, next) => {
     }
 
     try {
-        const comments = await Comment.find({blogId : blogId})
+        const comments = await Comment.find({blogId : req.params.blogId}).populate(['userId', {
+            path : "replies",
+            populate : {
+                path : "userId",
+                model : "User"
+            }
+        }])
         res.status(200).json(comments)
     } catch (error) {
         next(error)
