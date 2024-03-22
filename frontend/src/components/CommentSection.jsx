@@ -66,7 +66,7 @@ const CommentSection = ({ blogId }) => {
             }
 
             if (res.ok) {
-                setComments([data ,...comments])
+                setComments([data, ...comments])
                 setCreateCommentLoading(false)
                 setCommentInput('')
             }
@@ -76,7 +76,13 @@ const CommentSection = ({ blogId }) => {
         }
     }
 
-    console.log(comments)
+    const handleCommentEdit = async (comment, editedComment) => {
+        setComments(
+            comments.map(c =>
+                c._id === comment._id ? { ...comment, comment: editedComment } : c
+            )
+        )
+    }
 
     return (
         <section className="bg-white dark:bg-black py-8 lg:py-16 antialiased">
@@ -120,8 +126,9 @@ const CommentSection = ({ blogId }) => {
                             <label htmlFor="comment" className="sr-only">Your comment</label>
                             <textarea id="comment" rows="6"
                                 className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-                                placeholder="Write a comment..." onChange={(e) => setCommentInput(e.target.value)} value={commentInput} required ></textarea>
+                                placeholder="Write a comment..." onChange={(e) => setCommentInput(e.target.value)} value={commentInput} required maxLength={400} ></textarea>
                         </div>
+                        <p className="text-end text-sm text-gray-600 dark:text-gray-400">{400 - commentInput.length} letters remaining</p>
                         <Button size='sm' type="submit" disabled={!curUser} >
                             {
                                 createCommentLoading ?
@@ -133,13 +140,12 @@ const CommentSection = ({ blogId }) => {
                         </Button>
                     </form>
                 </>
-
                 {
                     comments &&
                     <>
                         {
                             comments.map(comment =>
-                                <Comment key={comment._id} comment={comment} />
+                                <Comment key={comment._id} comment={comment} onEdit={handleCommentEdit} />
                             )
                         }
                     </>

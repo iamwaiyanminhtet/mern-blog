@@ -40,7 +40,6 @@ const Blog = () => {
         fetchBlog()
     }, [blogSlug])
 
-    console.log(blog.content)
 
     return (
         <>

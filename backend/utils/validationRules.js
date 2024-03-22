@@ -71,3 +71,7 @@ export const createCommentValidation = [
     body('likes').optional({nullable:true}).isArray().withMessage('Likes : Invalid value'),
     body('replies').optional({nullable:true}).isArray().withMessage('Replies : Invalid value')
 ]
+
+export const updateCommentValidation = [
+    body('comment').trim().isString().escape().withMessage("Comment : Invalid Value"),
+]
