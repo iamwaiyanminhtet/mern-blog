@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import htmlReactParser from "html-react-parser"
+import CommentSection from "../components/CommentSection";
 
 const Blog = () => {
     const { blogSlug } = useParams();
@@ -95,7 +96,7 @@ const Blog = () => {
                             <img src={blog.image} alt="" />
                         </div>
                         <div className="dark:text-gray-100">
-                            <div>
+                            <div className="blog-content" >
                                 {htmlReactParser(blog?.content || '')}
                             </div>
                         </div>
@@ -120,6 +121,7 @@ const Blog = () => {
                             </ul>
                         </div>
                     </div>
+                    <CommentSection blog={blog} />
                 </div>
             }
         </>

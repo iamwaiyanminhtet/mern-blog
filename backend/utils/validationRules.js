@@ -63,3 +63,11 @@ export const updateBlogValidation = [
 
     body('categoryId').optional({nullable : true}).isMongoId().withMessage("Category : Invalid Value"),
 ]
+
+// comment validation
+export const createCommentValidation = [
+    body('comment').trim().isString().escape().withMessage("Comment : Invalid Value"),
+
+    body('likes').optional({nullable:true}).isArray().withMessage('Likes : Invalid value'),
+    body('replies').optional({nullable:true}).isArray().withMessage('Replies : Invalid value')
+]
