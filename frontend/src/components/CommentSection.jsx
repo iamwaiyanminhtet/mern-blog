@@ -3,11 +3,12 @@ import { Button, Toast, Spinner } from "flowbite-react"
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux"
 import Comment from "./Comment";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const CommentSection = ({ blogId }) => {
 
     const { user: curUser } = useSelector(state => state.user)
+    const navigate = useNavigate();
     const [commentInput, setCommentInput] = useState('')
 
     // create comment states
@@ -84,6 +85,33 @@ const CommentSection = ({ blogId }) => {
         )
     }
 
+    const handleLike = async (commentId, userId) => {
+        try {
+            if (!curUser) {
+                navigate('/sign-in');
+                return;
+            }
+            const res = await fetch(`/api/comment/likeComment/${commentId}/${userId}`, {
+                method: 'PUT',
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setComments(
+                    comments.map((comment) =>
+                        comment._id === commentId
+                            ? {
+                                ...comment,
+                                likes: data.likes,
+                            }
+                            : comment
+                    )
+                );
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     return (
         <section className="bg-white dark:bg-black py-8 lg:py-16 antialiased">
             <div className="max-w-5xl mx-auto px-4">
@@ -145,7 +173,12 @@ const CommentSection = ({ blogId }) => {
                     <>
                         {
                             comments.map(comment =>
-                                <Comment key={comment._id} comment={comment} onEdit={handleCommentEdit} />
+                                <Comment
+                                    key={comment._id}
+                                    comment={comment}
+                                    onEdit={handleCommentEdit}
+                                    onLike={handleLike}
+                                />
                             )
                         }
                     </>

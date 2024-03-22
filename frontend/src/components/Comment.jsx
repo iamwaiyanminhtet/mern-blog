@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
-import { Button, Textarea } from "flowbite-react";
+import { Button, Textarea, Toast } from "flowbite-react";
 import { useState } from "react";
-import { GoHeart } from "react-icons/go";
+import { FaHeart } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import moment from "moment"
 
-const Comment = ({ comment, onEdit }) => {
+const Comment = ({ comment, onEdit, onLike }) => {
 
     const { user: curUser } = useSelector(state => state.user)
     const [isEditing, setIsEditing] = useState(false)
@@ -56,16 +56,26 @@ const Comment = ({ comment, onEdit }) => {
                     isEditing ?
                         <>
 
+                            {
+                                editError &&
+                                <Toast className="mt-2 mb-2 min-w-fit h-10 bg-red-500 dark:bg-red-500" >
+                                    <div className="ml-3 text-sm text-black font-sm sm:text-nowrap">
+                                        {'hhhhhhh'}
+                                    </div>
+                                    <Toast.Toggle />
+                                </Toast>
+                            }
+
                             <Textarea defaultValue={editingContent} onChange={(e) => setEditingContent(e.target.value)} rows={3} />
                             <div className="flex justify-end mt-2 gap-1">
                                 <Button size="xs" onClick={handleEditSave}>Save</Button>
-                                <Button size="xs" color='light' onClick={() => setIsEditing(false)} >Cancle</Button>
+                                <Button size="xs" color='light' onClick={() => setIsEditing(false)} >Cancel</Button>
                             </div>
 
                         </>
                         :
                         <>
-                            <p className="text-gray-500 dark:text-gray-400">
+                            <p className="text-gray-700 dark:text-gray-400">
                                 {comment.comment}
                             </p>
                         </>
@@ -74,17 +84,16 @@ const Comment = ({ comment, onEdit }) => {
                     <div className="flex flex-row">
                         <button type="button"
                             className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                            <GoHeart strokeWidth={2} size='18px' />
+                            <FaHeart className="shadow-md" strokeWidth={2} size='18px' fill={`${comment.likes.includes(curUser._id) ? '#E02424' : 'gray'}`} onClick={() => onLike(comment._id, curUser._id)} />
                         </button>
                         <span className="ms-2 text-sm text-gray-500  dark:text-gray-400 font-semibold" >
                             {comment.likes.length !== 0 ? `${comment.likes.length} - likes` : '0 - likes'}
                         </span>
-
                     </div>
                     <div className="text-sm flex gap-2 ">
                         <button className="text-sm text-gray-500 hover:underline dark:text-gray-400 font-semibold">Reply</button>
                         {
-                            (curUser.isAdmin || curUser._id === comment.userId._id) &&
+                            (curUser?.isAdmin || curUser?._id === comment.userId._id) &&
                             <>
                                 <button className="text-blue-500  dark:text-blue-600 hover:underline font-semibold" onClick={() => setIsEditing(true)} >Edit</button>
                                 <button className="text-red-500  dark:text-red-600  hover:underline font-semibold">Delete</button>

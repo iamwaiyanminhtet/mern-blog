@@ -52,6 +52,10 @@ export const getComment = async (req, res, next) => {
 
 export const updateComment = async (req, res, next) => {
 
+    if (!req.user) {
+        return next(errorHandler(403, "You are not allowed to update this comment"))
+    }
+
     try {
         const comment = await Comment.find({_id : req.params.commentId});
         if (!comment) {
@@ -75,4 +79,32 @@ export const updateComment = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+export const likeComment = async (req, res, next) => {
+    if (!req.user) {
+        return next(errorHandler(403, "You are not allowed to like this post"))
+    }
+
+    try {
+        const comment = await Comment.findById(req.params.commentId);
+    
+        if (!comment) {
+          return next(errorHandler(404, "Comment Not Found"));
+        }
+    
+        const userIndex = comment.likes.indexOf(req.params.userId);
+    
+        if (userIndex === -1) {
+          comment.likes.push(req.user.id)
+        } else {
+          comment.likes.splice(userIndex, 1)
+        }
+    
+        await comment.save();
+        res.status(200).json(comment)
+    
+      } catch (error) {
+        next(error)
+      }
 }
