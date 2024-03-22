@@ -34,12 +34,14 @@ export const createComment = async (req, res, next) => {
 }
 
 export const getComment = async (req, res, next) => {
-    if(!req.user) {
-        return next(errorHandler(403, "You are not allowed to comment on this post"))
-    }
-
     try {
-        const comments = await Comment.find({blogId : blogId})
+        const comments = await Comment.find({blogId : req.params.blogId}).populate(['userId', {
+            path : "replies",
+            populate : {
+                path : "userId",
+                model : "User"
+            }
+        }]).sort({createdAt : -1})
         res.status(200).json(comments)
     } catch (error) {
         next(error)
