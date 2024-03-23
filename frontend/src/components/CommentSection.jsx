@@ -30,7 +30,7 @@ const CommentSection = ({ blogId }) => {
             }
 
             if (res.ok) {
-                setComments(data)
+                setComments(data.comments)
                 setLoadCommentsError(null)
             }
         }

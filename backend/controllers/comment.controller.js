@@ -64,9 +64,19 @@ export const createComment = async (req, res, next) => {
     }
 }
 
-export const getComment = async (req, res, next) => {
+export const getComments = async (req, res, next) => {
     try {
-        const comments = await Comment.find({ blogId: req.params.blogId }).populate(['userId', {
+        const startIndex = parseInt(req.query.startIndex || 0)
+        const limit = parseInt(req.query.limit || 5)
+
+        const comments = await Comment.find(
+            {
+                ...(req.params.blogId && { blogId: new mongoose.Types.ObjectId(req.params.blogId) }),
+                ...(req.query.searchTerm && {
+                    comment: { $regex: req.query.searchTerm, $options: "i" }
+                }),
+            }
+        ).skip(startIndex).limit(limit).populate(['userId', 'blogId', {
             path: "replies",
             options: { sort: { createdAt: -1 } },
             populate: {
@@ -74,7 +84,24 @@ export const getComment = async (req, res, next) => {
                 model: "User"
             }
         }]).sort({ createdAt: -1 })
-        res.status(200).json(comments)
+
+        const totalComments = await Comment.countDocuments();
+
+        const now = new Date();
+
+        const oneMonthAgo = new Date(
+            now.getFullYear(),
+            now.getMonth() - 1,
+            now.getDate()
+          );
+      
+        const lastMonthComments = await Comment.countDocuments({createdAt : { $gte : oneMonthAgo }})
+
+        res.status(200).json({
+            comments,
+            totalComments,
+            lastMonthComments
+        })
     } catch (error) {
         next(error)
     }
@@ -190,8 +217,8 @@ export const deleteComment = async (req, res, next) => {
 
             if (req.params.isReply === "false") {
                 if (commentToDelete.replies.length > 0) {
-                    commentToDelete.replies.map(async (cmt) => 
-                        await Comment.findByIdAndDelete(cmt)   
+                    commentToDelete.replies.map(async (cmt) =>
+                        await Comment.findByIdAndDelete(cmt)
                     )
                 }
             }
