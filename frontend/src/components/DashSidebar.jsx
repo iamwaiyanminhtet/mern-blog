@@ -62,11 +62,27 @@ const DashSidebar = () => {
                             </Sidebar.Item>
                         </Link>
                     }
-                     {
+                    {
+                        user.isAdmin &&
+                        <Link to='/dashboard?tab=categories'>
+                            <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "categories"} >
+                                Categories
+                            </Sidebar.Item>
+                        </Link>
+                    }
+                    {
                         user.isAdmin &&
                         <Link to='/dashboard?tab=blogs'>
                             <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "blogs"} >
                                 Blogs
+                            </Sidebar.Item>
+                        </Link>
+                    }
+                    {
+                        user.isAdmin &&
+                        <Link to='/dashboard?tab=comments'>
+                            <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "comments"} >
+                                Comments
                             </Sidebar.Item>
                         </Link>
                     }

@@ -1,36 +1,6 @@
-import Category from "../models/category.model.js";
 import Blog from "../models/blog.model.js"
 import { errorHandler } from "../utils/custom-error.js"
 import { validationResult } from "express-validator"
-
-export const createCategory = async (req, res, next) => {
-    if(!req.user.isAdmin) {
-        next(errorHandler(403, "You are not allowed to make this request"));
-    }
-
-    try {
-        await Category.create({
-            category : req.body.category
-        })
-    
-        res.status(200).json({message : "New category has created."})   
-    } catch (error) {
-        next(error)
-    }
-}
-
-export const getCategories = async (req, res, next) => {
-    if(!req.user.isAdmin) {
-        next(errorHandler(403, "You are not allowed to make this request"));
-    }
-
-    try {
-        const categories = await Category.find()
-        res.status(200).json(categories)   
-    } catch (error) {
-        next(error)
-    }
-}
 
 export const createBlog = async (req, res, next) => {
     if(!req.user.isAdmin) {

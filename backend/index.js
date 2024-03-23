@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import blogRoutes from "./routes/blog.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
 import mongoose from "mongoose";
 
 const app = express();
@@ -32,6 +33,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/comment', commentRoutes);
+app.use('/api/category', categoryRoutes);
 
 // last error middleware
 app.use((err, req, res, next) => {

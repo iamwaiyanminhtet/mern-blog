@@ -32,7 +32,7 @@ const DashBlogs = () => {
   // get all categories
   useEffect(() => {
     const fetchCategories = async () => {
-      const res = await fetch('/api/blog/getCategories')
+      const res = await fetch('/api/category/getCategories')
       const data = await res.json();
 
       setCategories(data)
