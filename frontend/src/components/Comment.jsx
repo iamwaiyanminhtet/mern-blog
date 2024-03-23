@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import moment from "moment"
 import Reply from "./Reply";
 
-const Comment = ({ comment, onEdit, onLike, blogId, comments, setComments }) => {
+const Comment = ({ comment, onEdit, onLike, blogId, comments, setComments, onDelete }) => {
 
     const { user: curUser } = useSelector(state => state.user)
 
@@ -114,7 +114,8 @@ const Comment = ({ comment, onEdit, onLike, blogId, comments, setComments }) => 
                                     </Toast>
                                 }
 
-                                <Textarea defaultValue={editingContent} onChange={(e) => setEditingContent(e.target.value)} rows={3} />
+                                <Textarea defaultValue={editingContent} onChange={(e) => setEditingContent(e.target.value)} rows={3} maxLength={400} />
+                                <p className="text-end text-xs text-gray-600 dark:text-gray-400 mt-2">{400 - editingContent.length} letters remaining</p>
                                 <div className="flex justify-end mt-2 gap-1">
                                     <Button size="xs" onClick={() => handleEditSave(editingContent, false)}>Save</Button>
                                     <Button size="xs" color='light' onClick={() => setIsEditing(false)} >Cancel</Button>
@@ -145,7 +146,7 @@ const Comment = ({ comment, onEdit, onLike, blogId, comments, setComments }) => 
                                 (curUser?.isAdmin || curUser?._id === comment.userId._id) &&
                                 <>
                                     <button className="text-blue-500  dark:text-blue-600 hover:underline font-semibold" onClick={() => setIsEditing(true)} >Edit</button>
-                                    <button className="text-red-500  dark:text-red-600  hover:underline font-semibold">Delete</button>
+                                    <button className="text-red-500  dark:text-red-600  hover:underline font-semibold" onClick={() => onDelete(comment._id, curUser._id, false)} >Delete</button>
                                 </>
                             }
                         </div>
@@ -162,7 +163,8 @@ const Comment = ({ comment, onEdit, onLike, blogId, comments, setComments }) => 
                                     <Toast.Toggle />
                                 </Toast>
                             }
-                            <Textarea onChange={(e) => setReplyContent(e.target.value)} rows={3} placeholder="reply..." />
+                            <Textarea onChange={(e) => setReplyContent(e.target.value)} rows={3} placeholder="reply..." maxLength={400} />
+                            <p className="text-end text-xs text-gray-600 dark:text-gray-400 mt-2">{400 - replyContent.length} letters remaining</p>
                             <div className="flex justify-end mt-2 gap-1">
                                 <Button size="xs" onClick={() => handleCreateReply()}>Reply</Button>
                                 <Button size="xs" color='light' onClick={() => setIsReplying(false)} >Cancel</Button>
@@ -180,6 +182,7 @@ const Comment = ({ comment, onEdit, onLike, blogId, comments, setComments }) => 
                         editError={editError}
                         onLike={onLike}
                         handleEditSave={handleEditSave}
+                        onDelete={onDelete}
                     />
                 )
             }

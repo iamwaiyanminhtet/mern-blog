@@ -5,7 +5,7 @@ import { Toast, Textarea, Button } from 'flowbite-react'
 import { useSelector } from 'react-redux'
 import { FaHeart } from 'react-icons/fa6'
 
-const Reply = ({ curReply, editError, onLike, handleEditSave }) => {
+const Reply = ({ curReply, editError, onLike, handleEditSave, onDelete }) => {
     const { user: curUser } = useSelector(state => state.user)
 
     const [isReplyEditing, setIsReplyEditing] = useState(false)
@@ -45,6 +45,7 @@ const Reply = ({ curReply, editError, onLike, handleEditSave }) => {
                         }
 
                         <Textarea defaultValue={replyEditingContent} onChange={(e) => setReplyEditingContent(e.target.value)} rows={3} />
+                        <p className="text-end text-xs text-gray-600 dark:text-gray-400 mt-2">{400 - replyEditingContent.length} letters remaining</p>
                         <div className="flex justify-end mt-2 gap-1">
                             <Button size="xs"
                                 onClick={() => {
@@ -83,7 +84,7 @@ const Reply = ({ curReply, editError, onLike, handleEditSave }) => {
                                 setIsReplyEditing(true)
                                 setReplyEditingContent(replyEditingContent)
                             }} >Edit</button>
-                            <button className="text-red-500  dark:text-red-600  hover:underline font-semibold">Delete</button>
+                            <button className="text-red-500  dark:text-red-600  hover:underline font-semibold" onClick={() => onDelete(curReply._id, curUser._id, true)} >Delete</button>
                         </>
                     }
                 </div>

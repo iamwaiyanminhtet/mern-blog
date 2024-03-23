@@ -1,6 +1,6 @@
 import express from "express"
 import {verifyUser} from "../utils/verifyUser.js"
-import { createComment, getComment, updateComment, likeComment } from "../controllers/comment.controller.js";
+import { createComment, getComment, updateComment, likeComment, deleteComment } from "../controllers/comment.controller.js";
 import { createCommentValidation, updateCommentValidation } from "../utils/validationRules.js"
 
 const router = express.Router();
@@ -11,5 +11,6 @@ router.get('/get-comments/:blogId', getComment)
 router.put('/update/:commentId/:userId/:isReply', verifyUser, updateCommentValidation, updateComment )
 // like comment
 router.put('/likeComment/:commentId/:userId', verifyUser, likeComment)
+router.delete('/delete/:commentId/:userId/:isReply', verifyUser, deleteComment)
 
 export default router;

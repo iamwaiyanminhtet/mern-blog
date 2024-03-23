@@ -156,3 +156,51 @@ export const likeComment = async (req, res, next) => {
         next(error)
     }
 }
+
+export const deleteComment = async (req, res, next) => {
+    if (!req.user) {
+        return next(errorHandler(403, "You are not allowed to like this post"))
+    }
+
+    try {
+        const commentToDelete = await Comment.findById(req.params.commentId);
+        if (!commentToDelete) {
+            return next(errorHandler(404, 'comment not found'));
+        }
+
+        if (req.user.isAdmin || req.user.id === req.params.userId) {
+            const comment = await Comment.findByIdAndDelete(req.params.commentId);
+
+            if (req.params.isReply === "true") {
+                const parentComment = await Comment.findById(commentToDelete.parentCommentId).populate('userId');
+
+                const cmtId = new mongoose.Types.ObjectId(req.params.commentId)
+
+                if (parentComment.replies.includes(cmtId)) {
+                    const removeIndex = parentComment.replies.indexOf(cmtId);
+                    parentComment.replies.splice(removeIndex, 1)
+                    await parentComment.save()
+
+                    return res.status(200).json({
+                        parentComment,
+                        comment
+                    })
+                }
+            }
+
+            if (req.params.isReply === "false") {
+                if (commentToDelete.replies.length > 0) {
+                    commentToDelete.replies.map(async (cmt) => 
+                        await Comment.findByIdAndDelete(cmt)   
+                    )
+                }
+            }
+
+            return res.status(200).json(comment);
+        } else {
+            return next(errorHandler(403, 'You are not allowed to delete this comment'));
+        }
+    } catch (error) {
+        next(error);
+    }
+}

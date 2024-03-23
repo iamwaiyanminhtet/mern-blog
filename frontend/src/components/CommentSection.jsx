@@ -38,7 +38,7 @@ const CommentSection = ({ blogId }) => {
         fetchComments()
     }, [blogId])
 
-
+    // create a comment
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!curUser) {
@@ -77,6 +77,7 @@ const CommentSection = ({ blogId }) => {
         }
     }
 
+    // edit a comment
     const handleCommentEdit = async (comment, editedComment) => {
         setComments(
             comments.map(c =>
@@ -93,6 +94,7 @@ const CommentSection = ({ blogId }) => {
             }
             const res = await fetch(`/api/comment/likeComment/${commentId}/${userId}`, {
                 method: 'PUT',
+                headers: { 'Content-Type': 'application/json' }
             });
             const data = await res.json()
 
@@ -123,6 +125,27 @@ const CommentSection = ({ blogId }) => {
         }
         catch (error) {
             console.log(error.message);
+        }
+    }
+
+    const handleDelete = async (commentId, userId, isReply) => {
+        const res = await fetch(`/api/comment/delete/${commentId}/${userId}/${isReply}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        
+        const data = await res.json()
+        if(isReply) {
+            setComments(comments.filter(cmt => cmt._id !== data.comment._id).map(comment =>
+                comment.replies.length > 0 ?
+                    {
+                        ...comment, replies: comment.replies.filter(
+                            c => c._id !== commentId
+                        )
+                    } : comment
+            ))
+        } else {
+            setComments(comments.filter(comment => comment._id !== commentId))
         }
     }
 
@@ -195,6 +218,7 @@ const CommentSection = ({ blogId }) => {
                                     blogId={blogId}
                                     comments={comments}
                                     setComments={setComments}
+                                    onDelete={handleDelete}
                                 />
                             )
                         }
