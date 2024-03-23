@@ -38,7 +38,7 @@ const Reply = ({ curReply, editError, onLike, handleEditSave }) => {
                             editError &&
                             <Toast className="mt-2 mb-2 min-w-fit h-10 bg-red-500 dark:bg-red-500" >
                                 <div className="ml-3 text-sm text-black font-sm sm:text-nowrap">
-                                    {'hhhhhhh'}
+                                    {editError}
                                 </div>
                                 <Toast.Toggle />
                             </Toast>
@@ -68,7 +68,7 @@ const Reply = ({ curReply, editError, onLike, handleEditSave }) => {
                 <div className="flex flex-row">
                     <button type="button"
                         className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                        <FaHeart className="shadow-md" strokeWidth={2} size='18px' fill={`${curReply.likes.includes(curUser._id) ? '#E02424' : 'gray'}`} onClick={() => onLike(curReply._id, curUser._id)} />
+                        <FaHeart className="shadow-md" strokeWidth={2} size='18px' fill={`${curReply.likes.includes(curUser._id) ? '#E02424' : 'gray'}`} onClick={() => onLike(curReply._id, curUser._id, true)} />
                     </button>
                     <span className="ms-2 text-sm text-gray-500  dark:text-gray-400 font-semibold" >
                         {curReply.likes.length !== 0 ? `${curReply.likes.length} - likes` : '0 - likes'}

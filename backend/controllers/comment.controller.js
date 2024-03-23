@@ -135,7 +135,7 @@ export const likeComment = async (req, res, next) => {
     }
 
     try {
-        const comment = await Comment.findById(req.params.commentId);
+        const comment = await Comment.findById(req.params.commentId).populate('userId');
 
         if (!comment) {
             return next(errorHandler(404, "Comment Not Found"));
@@ -150,7 +150,7 @@ export const likeComment = async (req, res, next) => {
         }
 
         await comment.save();
-        res.status(200).json(comment)
+        res.status(200).json(comment);
 
     } catch (error) {
         next(error)

@@ -132,7 +132,7 @@ const Comment = ({ comment, onEdit, onLike, blogId, comments, setComments }) => 
                         <div className="flex flex-row">
                             <button type="button"
                                 className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                                <FaHeart className="shadow-md" strokeWidth={2} size='18px' fill={`${comment.likes.includes(curUser._id) ? '#E02424' : 'gray'}`} onClick={() => onLike(comment._id, curUser._id)} />
+                                <FaHeart className="shadow-md" strokeWidth={2} size='18px' fill={`${comment.likes.includes(curUser._id) ? '#E02424' : 'gray'}`} onClick={() => onLike(comment._id, curUser._id, false)} />
                             </button>
                             <span className="ms-2 text-sm text-gray-500  dark:text-gray-400 font-semibold" >
                                 {comment.likes.length !== 0 ? `${comment.likes.length} - likes` : '0 - likes'}

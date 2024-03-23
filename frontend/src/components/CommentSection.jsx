@@ -85,7 +85,7 @@ const CommentSection = ({ blogId }) => {
         )
     }
 
-    const handleLike = async (commentId, userId) => {
+    const handleLike = async (commentId, userId, isReply) => {
         try {
             if (!curUser) {
                 navigate('/sign-in');
@@ -94,20 +94,34 @@ const CommentSection = ({ blogId }) => {
             const res = await fetch(`/api/comment/likeComment/${commentId}/${userId}`, {
                 method: 'PUT',
             });
+            const data = await res.json()
+
             if (res.ok) {
-                const data = await res.json();
-                setComments(
-                    comments.map((comment) =>
-                        comment._id === commentId
-                            ? {
-                                ...comment,
-                                likes: data.likes,
-                            }
-                            : comment
-                    )
-                );
+                if (isReply) {
+                    setComments(comments.map(comment =>
+                        comment.replies.length > 0 ?
+                            {
+                                ...comment, replies: comment.replies.map(
+                                    c => c._id === data._id ? data : c
+                                )
+                            } : comment
+                    ))
+                } else {
+                    setComments(
+                        comments.map((comment) =>
+                            comment._id === commentId
+                                ? {
+                                    ...comment,
+                                    likes: data.likes,
+                                }
+                                : comment
+                        )
+                    );
+                    return
+                }
             }
-        } catch (error) {
+        }
+        catch (error) {
             console.log(error.message);
         }
     }
