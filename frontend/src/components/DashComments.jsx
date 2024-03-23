@@ -2,7 +2,7 @@
 import { useNavigate, Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react";
-import { Breadcrumb, Table, Modal, Button, Toast } from "flowbite-react"
+import { Breadcrumb, Table, Modal, Button, Toast, TextInput } from "flowbite-react"
 import { HiHome, HiOutlineExclamationCircle, HiCheck } from "react-icons/hi";
 import { FaTrash } from "react-icons/fa";
 
@@ -10,7 +10,7 @@ const DashComments = () => {
   const { user: curUser } = useSelector(state => state.user)
   const navigate = useNavigate();
 
-  // fetch user data state
+  // fetch comment data state
   const [commentsData, setCommentsData] = useState([]);
   const [comentsDataLoading, setCommentsDataLoading] = useState(false);
   const [showMore, setShowMore] = useState(true);
@@ -18,6 +18,8 @@ const DashComments = () => {
   const [commentIdToDelete, setCommentIdToDelete] = useState(null);
   const [isDeleteCommentReply, setIsDeleteCommentReply] = useState(null)
   const [deleteCommentSuccess, setDeleteCommentSuccess] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState('')
 
   // check if admin or not
   useEffect(() => {
@@ -78,6 +80,17 @@ const DashComments = () => {
     }
   }
 
+  const handleSearch = async () => {
+    const startIndex = commentsData.length
+    const res = await fetch(`/api/comment/get-comments?startIndex=${startIndex}&searchTerm=${searchTerm.trim()}&limit=${20}`)
+    const data = await res.json();
+
+    if (res.ok) {
+      setCommentsData(data.comments)
+    }
+  }
+
+  console.log(commentsData)
 
   return (
     <>
@@ -93,7 +106,7 @@ const DashComments = () => {
           </Breadcrumb.Item>
         </Breadcrumb>
 
-        <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-3 sm:mt-0 `} >
+        <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-3 sm:mt-0 ${deleteCommentSuccess ? "justify-between" : "justify-end"}`} >
 
           {
             deleteCommentSuccess &&
@@ -107,6 +120,11 @@ const DashComments = () => {
               <Toast.Toggle />
             </Toast>
           }
+
+          <div className="flex gap-2 justify-end" >
+            <TextInput placeholder="create a category" onChange={(e) => setSearchTerm(e.target.value)} />
+            <Button onClick={handleSearch} >Create</Button>
+          </div>
         </div>
 
         {/* table data */}
@@ -172,23 +190,21 @@ const DashComments = () => {
                       <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={comment._id} >
                         <Table.Cell>{index + 1}</Table.Cell>
                         <Table.Cell className="max-w-[50px] font-medium text-gray-900 dark:text-white">
-                          <Link to={`/blogs/${comment.blogId.slug}`}  >
-                           <p className="line-clamp-1 break-all" >{comment.comment}</p>
-                          </Link>
+                          <p className="line-clamp-1 break-all" >{comment.comment}</p>
                         </Table.Cell>
                         <Table.Cell>
                           {comment.userId.username}
                         </Table.Cell>
                         <Table.Cell>
                           <Link to={`/blogs/${comment.blogId.slug}`} className="underline hover:opacity-90 truncate ..." >
-                          {comment.blogId.title}
+                            {comment.blogId.title}
                           </Link>
                         </Table.Cell>
                         <Table.Cell>
-                        {comment.isReply.toString()}
+                          {comment.isReply.toString()}
                         </Table.Cell>
                         <Table.Cell>
-                         in blog
+                          in blog
                         </Table.Cell>
                         <Table.Cell>
                           <span className="text-red-500" onClick={() => {
