@@ -53,7 +53,7 @@ const CommentSection = ({ blogId }) => {
         }
 
         try {
-            const res = await fetch(`/api/comment/create-comment/${blogId}/${curUser._id}`, {
+            const res = await fetch(`/api/comment/create-comment/${blogId}/${curUser._id}/false`, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ comment: commentInput })
@@ -178,6 +178,8 @@ const CommentSection = ({ blogId }) => {
                                     comment={comment}
                                     onEdit={handleCommentEdit}
                                     onLike={handleLike}
+                                    blogId={blogId}
+                                    setComments={setComments}
                                 />
                             )
                         }

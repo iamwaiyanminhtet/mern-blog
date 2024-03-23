@@ -22,14 +22,43 @@ export const createComment = async (req, res, next) => {
     }
 
     try {
-        const newComment = await Comment.create({
-            comment: req.body.comment,
-            userId: req.params.userId,
-            blogId: req.params.blogId
-        })
+        if(req.params.isReply === "false") {
+            const newComment = await Comment.create({
+                comment: req.body.comment,
+                userId: req.params.userId,
+                blogId: req.params.blogId
+            })
+    
+            const comment = await Comment.findById(newComment._id).populate(['userId'])
+            return res.status(200).json(comment)
+        }
 
-        const comment = await Comment.findById(newComment._id).populate(['userId'])
-        res.status(200).json(comment)
+        if(req.params.isReply === "true") {
+            const parentComment = await Comment.findById(req.params.parentCommentId)
+
+            // create a new comment
+            const newComment = await Comment.create({
+                comment: req.body.comment,
+                userId: req.params.userId,
+                blogId: req.params.blogId,
+                isReply : true,
+                parentCommentId : req.params.parentCommentId
+            })
+
+            // save reply id to parent comment
+            parentComment.replies.push(newComment._id)
+            await parentComment.save();
+
+            const comments = await Comment.find({ blogId: req.params.blogId }).populate(['userId', {
+                path: "replies",
+                options: { sort: { createdAt: -1 } },
+                populate: {
+                    path: "userId",
+                    model: "User"
+                }
+            }]).sort({ createdAt: -1 })
+            return res.status(200).json(comments)
+        }
     } catch (error) {
         next(error)
     }
@@ -39,6 +68,7 @@ export const getComment = async (req, res, next) => {
     try {
         const comments = await Comment.find({ blogId: req.params.blogId }).populate(['userId', {
             path: "replies",
+            options: { sort: { createdAt: -1 } },
             populate: {
                 path: "userId",
                 model: "User"
@@ -63,14 +93,24 @@ export const updateComment = async (req, res, next) => {
         }
 
         if (req.user.isAdmin || comment.userId === new mongoose.Types.ObjectId(req.params.userId)) {
-            const editedComment = await Comment.findByIdAndUpdate(
-                req.params.commentId,
-                {
-                    comment: req.body.comment,
-                },
-                { new: true }
-            );
-            res.status(200).json(editedComment);
+            // normal comment update
+            if(req.params.isReply === "false") {
+                const editedComment = await Comment.findByIdAndUpdate(
+                    req.params.commentId,
+                    {
+                        $set : {
+                            comment: req.body.comment,
+                        }
+                    },
+                    { new: true }
+                );
+                return res.status(200).json(editedComment);
+            } 
+            
+            // reply comment update
+            if(req.params.isReply === "true") {
+                return res.status(200).json({message : "update reply from bk"})
+            }
         }else {
             return next(
                 errorHandler(403, 'You are not allowed to edit this comment')

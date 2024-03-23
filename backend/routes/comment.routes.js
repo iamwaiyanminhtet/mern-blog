@@ -5,10 +5,10 @@ import { createCommentValidation, updateCommentValidation } from "../utils/valid
 
 const router = express.Router();
 
-router.post('/create-comment/:blogId/:userId', verifyUser, createCommentValidation, createComment)
+router.post('/create-comment/:blogId/:userId/:isReply/:parentCommentId?', verifyUser, createCommentValidation, createComment)
 router.get('/get-comments/:blogId', getComment)
 // edit document
-router.put('/update/:commentId/:userId', verifyUser, updateCommentValidation, updateComment )
+router.put('/update/:commentId/:userId/:isReply', verifyUser, updateCommentValidation, updateComment )
 // like comment
 router.put('/likeComment/:commentId/:userId', verifyUser, likeComment)
 

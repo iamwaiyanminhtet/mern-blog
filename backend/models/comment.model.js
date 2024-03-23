@@ -13,13 +13,22 @@ const commentSchema = mongoose.Schema({
         type : Schema.Types.ObjectId,
         ref : "Blog"
     },
+    // reply to which message
+    parentCommentId : {
+        type : Schema.Types.ObjectId,
+        ref : "Comment"
+    },
     likes : [{
         type : Schema.Types.ObjectId
     }],
     replies : [{
         type : Schema.Types.ObjectId,
         ref : "Comment"
-    }]
+    }],
+    isReply : {
+        type : Boolean,
+        default : false
+    }
 }, {timestamps : true});
 
 const Comment = mongoose.model('Comment', commentSchema);
