@@ -46,7 +46,13 @@ const Reply = ({ curReply, editError, onLike, handleEditSave }) => {
 
                         <Textarea defaultValue={replyEditingContent} onChange={(e) => setReplyEditingContent(e.target.value)} rows={3} />
                         <div className="flex justify-end mt-2 gap-1">
-                            <Button size="xs" onClick={() => handleEditSave(replyEditingContent, true)}>Save</Button>
+                            <Button size="xs"
+                                onClick={() => {
+                                    handleEditSave(replyEditingContent, true, curReply._id, curReply.userId._id, setIsReplyEditing)
+                                }}
+                            >
+                                Save
+                            </Button>
                             <Button size="xs" color='light' onClick={() => setIsReplyEditing(false)} >Cancel</Button>
                         </div>
 

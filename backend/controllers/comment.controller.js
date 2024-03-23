@@ -22,18 +22,18 @@ export const createComment = async (req, res, next) => {
     }
 
     try {
-        if(req.params.isReply === "false") {
+        if (req.params.isReply === "false") {
             const newComment = await Comment.create({
                 comment: req.body.comment,
                 userId: req.params.userId,
                 blogId: req.params.blogId
             })
-    
+
             const comment = await Comment.findById(newComment._id).populate(['userId'])
             return res.status(200).json(comment)
         }
 
-        if(req.params.isReply === "true") {
+        if (req.params.isReply === "true") {
             const parentComment = await Comment.findById(req.params.parentCommentId)
 
             // create a new comment
@@ -41,8 +41,8 @@ export const createComment = async (req, res, next) => {
                 comment: req.body.comment,
                 userId: req.params.userId,
                 blogId: req.params.blogId,
-                isReply : true,
-                parentCommentId : req.params.parentCommentId
+                isReply: true,
+                parentCommentId: req.params.parentCommentId
             })
 
             // save reply id to parent comment
@@ -87,31 +87,39 @@ export const updateComment = async (req, res, next) => {
     }
 
     try {
-        const comment = await Comment.find({_id : req.params.commentId});
+        const comment = await Comment.find({ _id: req.params.commentId });
         if (!comment) {
             return next(errorHandler(404, 'Comment not found'));
         }
 
         if (req.user.isAdmin || comment.userId === new mongoose.Types.ObjectId(req.params.userId)) {
+            const editedComment = await Comment.findByIdAndUpdate(
+                req.params.commentId,
+                {
+                    $set: {
+                        comment: req.body.comment,
+                    }
+                },
+                { new: true }
+            );
             // normal comment update
-            if(req.params.isReply === "false") {
-                const editedComment = await Comment.findByIdAndUpdate(
-                    req.params.commentId,
-                    {
-                        $set : {
-                            comment: req.body.comment,
-                        }
-                    },
-                    { new: true }
-                );
+            if (req.params.isReply === "false") {
                 return res.status(200).json(editedComment);
-            } 
-            
-            // reply comment update
-            if(req.params.isReply === "true") {
-                return res.status(200).json({message : "update reply from bk"})
             }
-        }else {
+
+            // reply comment update
+            if (req.params.isReply === "true") {
+                const comment = await Comment.find({ parentCommentId: editedComment.parentCommentId }).populate(['userId', {
+                    path: "replies",
+                    options: { sort: { createdAt: -1 } },
+                    populate: {
+                        path: "userId",
+                        model: "User"
+                    }
+                }]).sort({ createdAt: -1 })
+                res.status(200).json(comment)
+            }
+        } else {
             return next(
                 errorHandler(403, 'You are not allowed to edit this comment')
             );
@@ -128,23 +136,23 @@ export const likeComment = async (req, res, next) => {
 
     try {
         const comment = await Comment.findById(req.params.commentId);
-    
+
         if (!comment) {
-          return next(errorHandler(404, "Comment Not Found"));
+            return next(errorHandler(404, "Comment Not Found"));
         }
-    
+
         const userIndex = comment.likes.indexOf(req.params.userId);
-    
+
         if (userIndex === -1) {
-          comment.likes.push(req.user.id)
+            comment.likes.push(req.user.id)
         } else {
-          comment.likes.splice(userIndex, 1)
+            comment.likes.splice(userIndex, 1)
         }
-    
+
         await comment.save();
         res.status(200).json(comment)
-    
-      } catch (error) {
+
+    } catch (error) {
         next(error)
-      }
+    }
 }

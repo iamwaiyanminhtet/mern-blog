@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import moment from "moment"
 import Reply from "./Reply";
 
-const Comment = ({ comment, onEdit, onLike, blogId, setComments }) => {
+const Comment = ({ comment, onEdit, onLike, blogId, comments, setComments }) => {
 
     const { user: curUser } = useSelector(state => state.user)
 
@@ -20,18 +20,28 @@ const Comment = ({ comment, onEdit, onLike, blogId, setComments }) => {
     const [replyContent, setReplyContent] = useState('');
     const [replyError, setReplyError] = useState(null)
 
-    const handleEditSave = async (commentValue, isReply) => {
+    const handleEditSave = async (commentValue, isReply, replyCommentId = null, replyUserId = null, setIsReplyEditing = () => {}) => {
         if (isReply) {
-            const res = await fetch(`/api/comment/update/${comment._id}/${comment.userId._id}/${isReply}`, {
+            const res = await fetch(`/api/comment/update/${replyCommentId}/${replyUserId}/${isReply}`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ comment: commentValue })
             })
             const data = await res.json()
 
-            console.log(data)
+            if (data.success === false) {
+                setReplyError(data.message)
+            }
+            if (res.ok) {
+                setComments(comments.map(
+                    c => c._id === comment._id ? { ...c, replies: data } : c
+                ))
+                setIsReplyEditing(false)
+            }
+            return;
         } else {
-            const res = await fetch(`/api/comment/update/${comment._id}/${comment.userId._id}/${isReply}`, {
+            const res = await fetch(
+                `/api/comment/update/${comment._id}/${comment.userId._id}/${isReply}`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ comment: commentValue })
@@ -57,10 +67,10 @@ const Comment = ({ comment, onEdit, onLike, blogId, setComments }) => {
         })
 
         const data = await res.json()
-        if(data.message === false) {
+        if (data.message === false) {
             setReplyError(data.message)
         }
-        if(res.ok) {
+        if (res.ok) {
             setComments(data)
             setIsReplying(false)
         }

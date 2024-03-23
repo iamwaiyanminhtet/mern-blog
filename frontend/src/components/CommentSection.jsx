@@ -179,6 +179,7 @@ const CommentSection = ({ blogId }) => {
                                     onEdit={handleCommentEdit}
                                     onLike={handleLike}
                                     blogId={blogId}
+                                    comments={comments}
                                     setComments={setComments}
                                 />
                             )
