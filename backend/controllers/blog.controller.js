@@ -1,6 +1,7 @@
 import Blog from "../models/blog.model.js"
 import { errorHandler } from "../utils/custom-error.js"
 import { validationResult } from "express-validator"
+import mongoose from "mongoose"
 
 export const createBlog = async (req, res, next) => {
     if(!req.user.isAdmin) {
@@ -45,7 +46,7 @@ export const getBlogs = async (req, res, next) => {
 
         const blogs = await Blog.find({
             ...(req.query.userId && { userId : req.query.userId }),
-            ...(req.query.categoryId && { category : req.query.categoryId }),
+            ...(req.query.categoryId && { categoryId : req.query.categoryId }),
             ...(req.query.blogId && { _id : req.query.blogId }),
             ...(req.query.slug && { slug : req.query.slug }),
             ...(req.query.searchTerm && {

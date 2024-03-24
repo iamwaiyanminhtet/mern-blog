@@ -4,6 +4,7 @@ import htmlReactParser from "html-react-parser"
 import CommentSection from "../components/CommentSection";
 import { HiExclamation } from 'react-icons/hi'
 import { Toast } from "flowbite-react";
+import RelatedArticles from "../components/RelatedArticles";
 
 const Blog = () => {
     const { blogSlug } = useParams();
@@ -80,62 +81,51 @@ const Blog = () => {
 
             }
             {
-                !blogLoading &&
-                <div className="max-w-2xl px-6 py-16 mx-auto space-y-12">
-                    <article className="space-y-8 dark:bg-black dark:text-gray-50">
-                        <div className="space-y-6">
-                            <h1 className="text-4xl font-bold md:tracking-tight md:text-5xl">
-                                {blog.title}
-                            </h1>
-                            <div className="flex flex-col items-start justify-between w-full md:flex-row md:items-center dark:text-gray-400">
-                                <div className="flex items-center justify-between md:space-x-2 gap-3">
-                                    <img src={blog && (blog?.userId?.pfp || blog?.userId?.defaultPfp)} className="w-14 h-14 border rounded-full dark:bg-gray-500 dark:border-gray-700" />
-                                    <p className="text-sm flex flex-col">
-                                        <span>
-                                            {blog?.userId?.username}
-                                        </span>
-                                        <span className="ms-2">
-                                            {new Date(blog.createdAt).toDateString()}
-                                        </span>
+                !blogLoading && blog && 
+                <>
+                    <div className="max-w-2xl px-6 py-16 mx-auto space-y-12">
+                        <article className="space-y-8 dark:bg-black dark:text-gray-50">
+                            <div className="space-y-6">
+                                <h1 className="text-4xl font-bold md:tracking-tight md:text-5xl">
+                                    {blog.title}
+                                </h1>
+                                <div className="flex flex-col items-start justify-between w-full md:flex-row md:items-center dark:text-gray-400">
+                                    <div className="flex items-center justify-between md:space-x-2 gap-3">
+                                        <img src={blog && (blog?.userId?.pfp || blog?.userId?.defaultPfp)} className="w-14 h-14 border rounded-full dark:bg-gray-500 dark:border-gray-700" />
+                                        <p className="text-sm flex flex-col">
+                                            <span>
+                                                {blog?.userId?.username}
+                                            </span>
+                                            <span className="ms-2">
+                                                {new Date(blog.createdAt).toDateString()}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <p className="flex-shrink-0 mt-3 text-sm md:mt-0">
+                                        <span>{Math.floor(blog?.content?.length / 238) === 0 ? 1 : Math.floor(blog?.content?.length / 238)} min read</span> •
+                                        <span className="ms-1" >{blog.viewCount} views</span>
                                     </p>
                                 </div>
-                                <p className="flex-shrink-0 mt-3 text-sm md:mt-0">
-                                    <span>{Math.floor(blog?.content?.length / 238) === 0 ? 1 : Math.floor(blog?.content?.length / 238)} min read</span> •
-                                    <span className="ms-1" >{blog.viewCount} views</span>
-                                </p>
                             </div>
-                        </div>
+                            <div>
+                                <img src={blog.image} alt="" />
+                            </div>
+                            <div className="dark:text-gray-100">
+                                <div className="blog-content" >
+                                    {htmlReactParser(blog?.content || '')}
+                                </div>
+                            </div>
+                        </article>
                         <div>
-                            <img src={blog.image} alt="" />
-                        </div>
-                        <div className="dark:text-gray-100">
-                            <div className="blog-content" >
-                                {htmlReactParser(blog?.content || '')}
+                            <div className="flex flex-wrap py-6 gap-2 border-t border-dashed dark:border-gray-400">
+                                <a rel="noopener noreferrer" className="px-3 py-1 rounded-sm hover:underline dark:bg-blue-400 dark:text-gray-900">#{blog.categoryId?.category}</a>
                             </div>
                         </div>
-                    </article>
-                    <div>
-                        <div className="flex flex-wrap py-6 gap-2 border-t border-dashed dark:border-gray-400">
-
-                            <a rel="noopener noreferrer" className="px-3 py-1 rounded-sm hover:underline dark:bg-violet-400 dark:text-gray-900">#{blog.categoryId?.category}</a>
-                        </div>
-                        <div className="space-y-2">
-                            <h4 className="text-lg font-semibold">Related posts</h4>
-                            <ul className="ml-4 space-y-1 list-disc">
-                                <li>
-                                    <a rel="noopener noreferrer" href="#" className="hover:underline">Nunc id magna mollis</a>
-                                </li>
-                                <li>
-                                    <a rel="noopener noreferrer" href="#" className="hover:underline">Duis molestie, neque eget pretium lobortis</a>
-                                </li>
-                                <li>
-                                    <a rel="noopener noreferrer" href="#" className="hover:underline">Mauris nec urna volutpat, aliquam lectus sit amet</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <CommentSection blogId={blog._id} />
                     </div>
-                    <CommentSection blogId={blog._id} />
-                </div>
+                    <RelatedArticles categoryId={blog.categoryId?._id} curBlogId={blog._id} />
+                </>
+
             }
         </>
     )

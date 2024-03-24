@@ -150,7 +150,7 @@ const CommentSection = ({ blogId }) => {
     }
 
     return (
-        <section className="bg-white dark:bg-black py-8 lg:py-16 antialiased">
+        <section className="bg-white dark:bg-black py-1 antialiased">
             <div className="max-w-5xl mx-auto px-4">
 
                 <>
