@@ -44,11 +44,14 @@ const DashSidebar = () => {
         <Sidebar aria-label="Sidebar with content separator example" className='w-full min-w-[280px]'>
             <Sidebar.Items >
                 <Sidebar.ItemGroup className='flex flex-col gap-1'>
-                    <Link to='/dashboard?tab=main'>
-                        <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "main"} >
-                            Dashboard
-                        </Sidebar.Item>
-                    </Link>
+                    {
+                        user.isAdmin &&
+                        <Link to='/dashboard?tab=main'>
+                            <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "main"} >
+                                Dashboard
+                            </Sidebar.Item>
+                        </Link>
+                    }
                     <Link to='/dashboard?tab=profile'>
                         <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "profile"} >
                             Profile

@@ -51,7 +51,7 @@ const DashCreateBlogPost = () => {
             const res = await fetch('/api/category/getCategories')
             const data = await res.json();
 
-            setCategories(data)
+            setCategories(data.categories)
         }
         fetchCategories()
     }, [curUser._id])

@@ -46,9 +46,9 @@ const DashCategories = () => {
             const res = await fetch(`/api/category/getCategories`)
             const data = await res.json();
             if (res.ok) {
-                setCategories(data)
+                setCategories(data.categories)
                 setCategoryDataLoading(false)
-                if (data.length < 9) {
+                if (data.categories.length < 9) {
                     setShowMore(false)
                 }
             }
@@ -60,6 +60,12 @@ const DashCategories = () => {
     }, [])
 
     const createCategory = async () => {
+
+        if(!categoryInput || categoryInput === '') {
+            setCreateCategoryError('Category is required')
+            return
+        }
+
         const res = await fetch(`/api/category/create-category`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

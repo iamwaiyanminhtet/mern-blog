@@ -25,7 +25,7 @@ const DashBlogs = () => {
   // check if admin or not
   useEffect(() => {
     if (!curUser.isAdmin) {
-      navigate('/dashboard?tab=main')
+      navigate('/dashboard?tab=profile')
     }
   }, [curUser.isAdmin])
 
@@ -35,7 +35,7 @@ const DashBlogs = () => {
       const res = await fetch('/api/category/getCategories')
       const data = await res.json();
 
-      setCategories(data)
+      setCategories(data.categories)
     }
     fetchCategories()
   }, [curUser._id])
@@ -254,10 +254,10 @@ const DashBlogs = () => {
                           </Link>
                         </Table.Cell>
                         <Table.Cell>
-                          {blog.categoryId.category}
+                          {blog.categoryId?.category}
                         </Table.Cell>
                         <Table.Cell>
-                          {blog.userId.username}
+                          {blog.userId?.username}
                         </Table.Cell>
                         <Table.Cell>
                           <Link to={`/update-blog/${blog._id}`} >
@@ -311,8 +311,6 @@ const DashBlogs = () => {
           }
         </div>
       </div>
-
-
     </>
   )
 }
