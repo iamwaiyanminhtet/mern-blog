@@ -1,6 +1,12 @@
+import FooterComponent from "../components/Footer";
+
 const Home = () => {
   return (
-    <div>Home</div>
+    <div className="">
+
+      lorem*20
+      <FooterComponent></FooterComponent>
+    </div>
   )
 }
 

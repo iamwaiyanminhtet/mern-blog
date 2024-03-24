@@ -122,8 +122,8 @@ const DashComments = () => {
           }
 
           <div className="flex gap-2 justify-end" >
-            <TextInput placeholder="create a category" onChange={(e) => setSearchTerm(e.target.value)} />
-            <Button onClick={handleSearch} >Create</Button>
+            <TextInput placeholder="search" onChange={(e) => setSearchTerm(e.target.value)} />
+            <Button onClick={handleSearch} >Search</Button>
           </div>
         </div>
 
@@ -193,11 +193,11 @@ const DashComments = () => {
                           <p className="line-clamp-1 break-all" >{comment.comment}</p>
                         </Table.Cell>
                         <Table.Cell>
-                          {comment.userId.username}
+                          {comment.userId?.username}
                         </Table.Cell>
                         <Table.Cell>
-                          <Link to={`/blogs/${comment.blogId.slug}`} className="underline hover:opacity-90 truncate ..." >
-                            {comment.blogId.title}
+                          <Link to={`/blogs/${comment.blogId?.slug}`} className="underline hover:opacity-90 truncate ..." >
+                            {comment.blogId?.title}
                           </Link>
                         </Table.Cell>
                         <Table.Cell>

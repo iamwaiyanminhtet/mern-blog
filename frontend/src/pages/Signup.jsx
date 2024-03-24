@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import FooterComponent from "../components/Footer";
 
 const Signup = () => {
   const [formData, setFormData] = useState({});
@@ -122,6 +123,7 @@ const Signup = () => {
           </div>
         </div>
       </section>
+      <FooterComponent/>
     </div>
   )
 }

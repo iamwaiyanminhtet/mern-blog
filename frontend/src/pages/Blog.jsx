@@ -5,6 +5,7 @@ import CommentSection from "../components/CommentSection";
 import { HiExclamation } from 'react-icons/hi'
 import { Toast } from "flowbite-react";
 import RelatedArticles from "../components/RelatedArticles";
+import FooterComponent from "../components/Footer"
 
 const Blog = () => {
     const { blogSlug } = useParams();
@@ -124,6 +125,7 @@ const Blog = () => {
                         <CommentSection blogId={blog._id} />
                     </div>
                     <RelatedArticles categoryId={blog.categoryId?._id} curBlogId={blog._id} />
+                    <FooterComponent/>
                 </>
 
             }

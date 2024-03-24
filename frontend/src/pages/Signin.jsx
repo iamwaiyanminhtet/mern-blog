@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signInStart, signInSuccess, signInFailure } from "../redux/user/user.slice.js"
 import GoogleLoginButton from "../components/GoogleLoginButton.jsx";
+import FooterComponent from "../components/Footer.jsx";
 
 const Signin = () => {
   // if the user come from signup page?
@@ -135,6 +136,7 @@ const Signin = () => {
           </div>
         </div>
       </section>
+      <FooterComponent/>
     </div>
   )
 }
