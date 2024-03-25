@@ -41,7 +41,7 @@ const DashCreateBlogPost = () => {
     // check if admin or not
     useEffect(() => {
         if (!curUser.isAdmin) {
-            navigate('/dashboard?tab=main')
+            navigate('/dashboard?tab=profile')
         }
     }, [curUser.isAdmin])
 

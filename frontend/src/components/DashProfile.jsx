@@ -42,7 +42,10 @@ const DashProfile = () => {
 
   // update img to fire base
   const handleImgUpdate = () => {
-    uploadImgToFirebase();
+    setImageFileUploadError(null)
+
+    if(imgFile) uploadImgToFirebase();
+    else setImageFileUploadError('Choose an image')
   }
 
   // delete img from firebase
@@ -54,7 +57,7 @@ const DashProfile = () => {
 
     // Delete the file
     deleteObject(desertRef).then(() => {
-      console.log('file deleted')
+      console.log('img deleted')
     }).catch((error) => {
       console.log(error)
     });
@@ -252,7 +255,7 @@ const DashProfile = () => {
             <div className="mb-3">
               <Label htmlFor="profile-update" value="Upload Profile Image" />
             </div>
-            <FileInput id="profile-update" helperText="SVG, PNG, JPG or GIF (MAX. 800x400px)." onChange={handleImgChange} />
+            <FileInput id="profile-update" helperText="Any image type less than 2MB" onChange={handleImgChange} />
             <Button gradientDuoTone="greenToBlue" className="mt-3 text-black" onClick={handleImgUpdate}>
               <BiSolidUpArrowSquare /> <span className="ms-2">Update Image</span>
             </Button>

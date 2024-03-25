@@ -26,7 +26,6 @@ const Signin = () => {
   // handle input data
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
-    console.log(formData)
   }
 
   // handle sign in

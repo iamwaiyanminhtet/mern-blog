@@ -22,7 +22,7 @@ const DashUsers = () => {
     // check if admin or not
     useEffect(() => {
         if (!curUser.isAdmin) {
-            navigate('/dashboard?tab=main')
+            navigate('/dashboard?tab=profile')
         }
     }, [curUser.isAdmin])
 
@@ -35,7 +35,6 @@ const DashUsers = () => {
                 setUsersData(data.users)
                 setUsersDataCopy(data.users)
                 setUsersDataLoading(false)
-                console.log(data)
                 if (data.users.length < 5 ) {
                     setShowMore(false)
                 }

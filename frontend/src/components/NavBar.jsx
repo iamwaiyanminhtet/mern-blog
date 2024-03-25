@@ -2,15 +2,16 @@ import { Avatar, Button, Dropdown, Navbar } from 'flowbite-react';
 import { FaSun, FaMoon } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import logo from "../assets/w-letter.jpg"
 import { toggleDarkTheme } from "../redux/theme/theme.slice.js"
-import {signOutSuccess} from "../redux/user/user.slice.js"
+import { signOutSuccess } from "../redux/user/user.slice.js"
 
 const NavBarComponent = () => {
     const { curTheme } = useSelector(state => state.theme)
     const { user } = useSelector(state => state.user)
+    const location = useLocation();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -49,7 +50,7 @@ const NavBarComponent = () => {
                     <Link className='hover:underline text-md' to='/'>Home</Link>
                     <Link className='hover:underline text-md' to='/search'>Blogs</Link>
                 </div>
-               
+
 
                 {
                     user !== null ?
@@ -59,12 +60,12 @@ const NavBarComponent = () => {
                             label={
                                 <Avatar alt={user.username} img={(props) => (
                                     <img
-                                     alt="user"
-                                     referrerPolicy="no-referrer"
-                                     src={user.pfp || user.defaultPfp}
-                                     {...props}
-                                 /> 
-                             )} rounded bordered status='online' statusPosition='bottom-right' />
+                                        alt="user"
+                                        referrerPolicy="no-referrer"
+                                        src={user.pfp || user.defaultPfp}
+                                        {...props}
+                                    />
+                                )} rounded bordered status='online' statusPosition='bottom-right' />
                             }
                             className="z-50"
                         >
@@ -72,11 +73,14 @@ const NavBarComponent = () => {
                                 <span className="block text-sm">{user.username}</span>
                                 <span className="block truncate text-sm font-medium">{user.email}</span>
                             </Dropdown.Header>
-                            <Link to='/dashboard?tab=main' >
-                                <Dropdown.Item>
-                                    Dashboard
-                                </Dropdown.Item>
-                            </Link>
+                            {
+                                user.isAdmin &&
+                                <Link to='/dashboard?tab=main' >
+                                    <Dropdown.Item>
+                                        Dashboard
+                                    </Dropdown.Item>
+                                </Link>
+                            }
                             <Link to='/dashboard?tab=profile' >
                                 <Dropdown.Item>
                                     Profile
@@ -92,17 +96,24 @@ const NavBarComponent = () => {
                             </Button>
                         </Link>
                 }
-                 <button className='text-lg p-3 border-2 border-black dark:border-slate-100 hover:bg-black hover:dark:bg-slate-100 hover:text-slate-100 hover:dark:text-black rounded-full  flex justify-center items-center' onClick={() => dispatch(toggleDarkTheme())}>
+                <button className='text-lg p-3 border-2 border-black dark:border-slate-100 hover:bg-black hover:dark:bg-slate-100 hover:text-slate-100 hover:dark:text-black rounded-full  flex justify-center items-center' onClick={() => dispatch(toggleDarkTheme())}>
                     {
                         curTheme === "dark" ? <FaSun /> : <FaMoon />
                     }
                 </button>
                 <Navbar.Toggle />
             </div>
-            <Navbar.Collapse className='md:hidden'>
-                <Navbar.Link as={'div'} active>
-                    <Link className='hover:underline text-md' to='/'>Home</Link>
-                </Navbar.Link>
+            <Navbar.Collapse className='md:hidden '>
+                <Link className='hover:underline text-md' to='/'>
+                    <Navbar.Link as={'div'} active={location.pathname === '/'} >
+                        Home
+                    </Navbar.Link>
+                </Link>
+                <Link className='hover:underline text-md' to='/search'>
+                    <Navbar.Link as={'div'} active={location.pathname === '/search'} >
+                        Blogs
+                    </Navbar.Link>
+                </Link>
             </Navbar.Collapse>
         </Navbar>
     );

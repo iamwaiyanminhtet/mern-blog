@@ -1,6 +1,10 @@
 import { Sidebar } from 'flowbite-react';
 import { HiChartPie } from 'react-icons/hi';
 import { RiLogoutBoxRFill } from "react-icons/ri";
+import { FaBloggerB, FaCommentAlt } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa6";
+import { BiSolidCategory } from "react-icons/bi";
+import { CgProfile } from "react-icons/cg";
 import { useSelector, useDispatch } from "react-redux"
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { signOutSuccess } from "../redux/user/user.slice.js"
@@ -53,14 +57,14 @@ const DashSidebar = () => {
                         </Link>
                     }
                     <Link to='/dashboard?tab=profile'>
-                        <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "profile"} >
+                        <Sidebar.Item icon={CgProfile} as={'div'} active={tab === "profile"} >
                             Profile
                         </Sidebar.Item>
                     </Link>
                     {
                         user.isAdmin &&
                         <Link to='/dashboard?tab=users'>
-                            <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "users"} >
+                            <Sidebar.Item icon={FaUsers} as={'div'} active={tab === "users"} >
                                 Users
                             </Sidebar.Item>
                         </Link>
@@ -68,7 +72,7 @@ const DashSidebar = () => {
                     {
                         user.isAdmin &&
                         <Link to='/dashboard?tab=categories'>
-                            <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "categories"} >
+                            <Sidebar.Item icon={BiSolidCategory} as={'div'} active={tab === "categories"} >
                                 Categories
                             </Sidebar.Item>
                         </Link>
@@ -76,7 +80,7 @@ const DashSidebar = () => {
                     {
                         user.isAdmin &&
                         <Link to='/dashboard?tab=blogs'>
-                            <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "blogs"} >
+                            <Sidebar.Item icon={FaBloggerB} as={'div'} active={tab === "blogs"} >
                                 Blogs
                             </Sidebar.Item>
                         </Link>
@@ -84,7 +88,7 @@ const DashSidebar = () => {
                     {
                         user.isAdmin &&
                         <Link to='/dashboard?tab=comments'>
-                            <Sidebar.Item icon={HiChartPie} as={'div'} active={tab === "comments"} >
+                            <Sidebar.Item icon={FaCommentAlt} as={'div'} active={tab === "comments"} >
                                 Comments
                             </Sidebar.Item>
                         </Link>

@@ -5,16 +5,16 @@ import { sendBackUserData } from "../utils/send-back-user-data.js";
 import bcryptjs from "bcryptjs";
 
 export const getUsers = async (req, res, next) => {
-    if(!req.user.isAdmin) {
+    if (!req.user.isAdmin) {
         next(errorHandler(403, "You are not allowed to make this request."))
     }
 
     try {
         const startIndex = parseInt(req.query.startIndex || 0);
         const limit = parseInt(req.query.limit || 5);
-        const sorting = req.query.sorting === "asc" ? 1 : -1 ;
+        const sorting = req.query.sorting === "asc" ? 1 : -1;
 
-        const users = await User.find().sort({createdAt : sorting}).skip(startIndex).limit(limit)
+        const users = await User.find().sort({ createdAt: sorting }).skip(startIndex).limit(limit)
 
         const usersWithoutPassword = users.map(user => {
             const { password, ...rest } = user._doc
@@ -33,11 +33,11 @@ export const getUsers = async (req, res, next) => {
         )
 
         const lastMonthUsers = await User.countDocuments({
-            createdAt : { $gte : oneMonthAgo }
+            createdAt: { $gte: oneMonthAgo }
         })
 
         res.status(200).json({
-            users : usersWithoutPassword,
+            users: usersWithoutPassword,
             totalUsers,
             lastMonthUsers
         })
@@ -52,18 +52,16 @@ export const updateUser = async (req, res, next) => {
         return next(errorHandler(403, 'You are not allowed to update this user'));
     }
 
-    const { username, email, password, pfp } = req.body;
-
     const curUser = await User.findOne({_id : req.params.userId})
-
-    if(username === curUser.username && email === curUser.email) {
-        return next(errorHandler(400, 'No Change has made.'));
-    }
 
     // validate signup data with express-validator
     const validationError = validationResult(req);
     if (!validationError.isEmpty()) {
         next(errorHandler(400, validationError.errors[0].msg));
+    }
+
+    if (req.body.password) {
+        req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
 
     try {
