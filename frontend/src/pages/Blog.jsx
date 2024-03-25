@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
-import htmlReactParser from "html-react-parser"
+import HTMLReactParser from "html-react-parser"
 import CommentSection from "../components/CommentSection";
 import { HiExclamation } from 'react-icons/hi'
 import { Toast } from "flowbite-react";
@@ -113,7 +113,7 @@ const Blog = () => {
                             </div>
                             <div className="dark:text-gray-100">
                                 <div className="blog-content" >
-                                    {htmlReactParser(blog?.content || '')}
+                                    {HTMLReactParser(blog?.content || '')}
                                 </div>
                             </div>
                         </article>

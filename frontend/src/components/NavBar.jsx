@@ -47,7 +47,7 @@ const NavBarComponent = () => {
             <div className="flex md:order-2 gap-3 sm:gap-8  items-center">
                 <div className='hidden sm:flex gap-5'>
                     <Link className='hover:underline text-md' to='/'>Home</Link>
-                    <Link className='hover:underline text-md'>Blogs</Link>
+                    <Link className='hover:underline text-md' to='/search'>Blogs</Link>
                 </div>
                
 

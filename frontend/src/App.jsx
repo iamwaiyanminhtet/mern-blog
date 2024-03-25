@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import DashboardAdminProtected from "./private/DashboardAdminProtected" 
 import DashUpdateBlog from "./components/DashUpdateBlog";
 import Blog from "./pages/Blog";
+import Search from "./pages/Search";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
             <Route path="/update-blog/:blogId" element={<DashUpdateBlog/>} />
           </Route>
           <Route path="/blogs/:blogSlug" element={<Blog/>} />
+          <Route path="/search" element={<Search/>} />
         </Routes>
       </BrowserRouter>
     </>

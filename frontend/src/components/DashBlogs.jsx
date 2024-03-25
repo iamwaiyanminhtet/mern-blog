@@ -49,7 +49,7 @@ const DashBlogs = () => {
         setBlogsData(data.blogs)
         setBlogsDataCopy(data.blogs)
         setBlogsDataLoading(false)
-        if (data.blogs.length < 5) {
+        if (data.blogs.length < 5 || data.blogs.length === data.totalBlogs) {
           setShowMore(false)
         }
       }
