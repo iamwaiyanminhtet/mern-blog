@@ -4,6 +4,9 @@ import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import HTMLReactParser from "html-react-parser"
 import { FaInfoCircle, FaTimes } from "react-icons/fa"
+import FooterComponent from "../components/Footer"
+
+// https://lottiefiles.com/animations/loading-599Uz5RpL5
 
 const Search = () => {
     const { user: curUser } = useSelector(state => state.user)
@@ -38,7 +41,7 @@ const Search = () => {
             }
         }
         fetchCategories()
-    }, [curUser._id])
+    }, [])
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -67,11 +70,11 @@ const Search = () => {
                 }
             }
         }
-        if (curUser.isAdmin) {
+      
             fetchBlogs()
-        }
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [curUser._id])
+    }, [])
 
     const handleSearch = async () => {
         setError(null)
@@ -209,7 +212,7 @@ const Search = () => {
                     <div className="flex flex-col sm:flex-row my-5 gap-3  justify-start md:justify-between items-start sm:items-center">
                         <p className="text-lg ">currently displaying {blogsData.blogs.length} of {blogsData.total} blogs</p>
                         <p className="text-sm max-w-80">
-                            how searching works in here : just selecting will filter from current display data. however, when search button is clicked, selecting values will be carried to search from whole data.
+                            how filtering works in here : just selecting will filter from current display data. however, when search button is clicked, selected values will be carried to search from whole data.
                         </p>
                     </div>
                     <div className="flex flex-col gap-5" >
@@ -256,6 +259,7 @@ const Search = () => {
                     }
                 </div>
             }
+            <FooterComponent />
         </div>
     )
 }

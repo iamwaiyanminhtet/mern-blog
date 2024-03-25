@@ -61,7 +61,7 @@ const RelatedArticles = ({ categoryId, curBlogId }) => {
                         <div className="space-y-2 text-center">
                             <h2 className="text-3xl font-bold text-black dark:text-slate-100">Related Articles</h2>
                         </div>
-                        <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-4 items-center">
                             {
                                 relatedArticles.filter(rl => rl._id !== curBlogId)
                                     .map(relatedArticle =>

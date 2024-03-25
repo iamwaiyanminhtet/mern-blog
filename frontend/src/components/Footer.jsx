@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const FooterComponent = () => {
     return (
         <footer className="py-6 px-5 bg-inherit">
-                <div className="flex flex-col sm:flex-row  justify-start  items-center sm:justify-between gap-5 ">
+                <div className="flex flex-col sm:flex-row  justify-start items-center  sm:items-center sm:justify-between gap-5 ">
                     <div className="flex flex-col sm:flex-row gap-4 text-sm ">
                         <span>©2024 Wai Yan Min Htet <span className='mx-4 hidden sm:inline'>|</span> </span>
                         <Link rel="noopener noreferrer" to='/' className='underline'>

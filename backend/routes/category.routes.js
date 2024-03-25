@@ -5,7 +5,7 @@ import { createCategory, getCategories, updateCategory,deleteCategory } from "..
 import { verifyUser } from "../utils/verifyUser.js"
 
 router.post('/create-category', verifyUser, createCategory )
-router.get('/getCategories', verifyUser, getCategories)
+router.get('/getCategories', getCategories)
 router.put('/update/:categoryId', verifyUser, updateCategory)
 router.delete('/delete/:categoryId', verifyUser, deleteCategory)
 
