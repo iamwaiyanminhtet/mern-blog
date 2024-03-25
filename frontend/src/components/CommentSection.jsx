@@ -19,12 +19,16 @@ const CommentSection = ({ blogId }) => {
     // load comments
     const [loadCommentsError, setLoadCommentsError] = useState(null)
 
+    //show more
+    const [showMore, setShowMore] = useState(true)
+
     // get comments
     useEffect(() => {
         const fetchComments = async () => {
-            const res = await fetch(`/api/comment/get-comments/${blogId}`)
+            const res = await fetch(`/api/comment/get-comments/${blogId}?isReply=${false}`)
             const data = await res.json()
 
+            console.log(data)
             if (data.success === false) {
                 setLoadCommentsError(data.message)
             }
@@ -32,6 +36,9 @@ const CommentSection = ({ blogId }) => {
             if (res.ok) {
                 setComments(data.comments)
                 setLoadCommentsError(null)
+                if (data.comments < 5 || data.comments.length === data.curPostComments) {
+                    setShowMore(false)
+                }
             }
         }
 
@@ -133,9 +140,9 @@ const CommentSection = ({ blogId }) => {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' }
         })
-        
+
         const data = await res.json()
-        if(isReply) {
+        if (isReply) {
             setComments(comments.filter(cmt => cmt._id !== data.comment._id).map(comment =>
                 comment.replies.length > 0 ?
                     {
@@ -149,9 +156,27 @@ const CommentSection = ({ blogId }) => {
         }
     }
 
+    const handleShowMore = async () => {
+        const startIndex = comments.length
+        const res = await fetch(`/api/comment/get-comments/${blogId}?isReply=${false}&startIndex=${startIndex}`)
+        const data = await res.json()
+
+        if (data.success === false) {
+            setLoadCommentsError(data.message)
+        }
+
+        if (res.ok) {
+            setComments([...comments, ...data.comments])
+            setLoadCommentsError(null)
+            if (data.comments.length < 5 ) {
+                setShowMore(false)
+            }
+        }
+    }
+
     return (
         <section className="bg-white dark:bg-black py-1 antialiased">
-            <div className="max-w-5xl mx-auto px-4">
+            <div className="max-w-5xl mx-auto px-1 sm:px-4">
 
                 <>
                     <div className="flex justify-between items-center mb-6">
@@ -194,15 +219,18 @@ const CommentSection = ({ blogId }) => {
                                 placeholder="Write a comment..." onChange={(e) => setCommentInput(e.target.value)} value={commentInput} required maxLength={400} ></textarea>
                         </div>
                         <p className="text-end text-sm text-gray-600 dark:text-gray-400">{400 - commentInput.length} letters remaining</p>
-                        <Button size='sm' type="submit" disabled={!curUser} >
-                            {
-                                createCommentLoading ?
-                                    <>
-                                        <Spinner size="sm" /> <span className="ms-2">Post a comment</span>
-                                    </> :
-                                    <span>Post a comment</span>
-                            }
-                        </Button>
+                        <div className="flex justify-between">
+                            <Button size='sm' type="submit" disabled={!curUser} >
+                                {
+                                    createCommentLoading ?
+                                        <>
+                                            <Spinner size="sm" /> <span className="ms-2">Post a comment</span>
+                                        </> :
+                                        <span>Post a comment</span>
+                                }
+                            </Button>
+                            <Button size="xs" className="mt-3" type="button">Hide Replies</Button>
+                        </div>
                     </form>
                 </>
                 {
@@ -224,8 +252,16 @@ const CommentSection = ({ blogId }) => {
                         }
                     </>
                 }
-            </div>
-        </section>
+                {
+                    showMore && comments.length > 0 &&
+                    < div className="mt-10 pb-5 flex justify-center">
+                        <button type="button" className="bg-sky-500 p-2 text-black  rounded-lg " onClick={handleShowMore} >
+                            <p className="text-center text-xs font-bold ">Load more</p>
+                        </button>
+                    </div>
+                }
+            </div >
+        </section >
     )
 }
 

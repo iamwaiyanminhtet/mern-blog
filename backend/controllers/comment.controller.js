@@ -75,6 +75,7 @@ export const getComments = async (req, res, next) => {
                 ...(req.query.searchTerm && {
                     comment: { $regex: req.query.searchTerm, $options: "i" }
                 }),
+                ...(req.query.isReply && {isReply : req.query.isReply})
             }
         ).skip(startIndex).limit(limit).populate(['userId', 'blogId', {
             path: "replies",
@@ -86,6 +87,9 @@ export const getComments = async (req, res, next) => {
         }]).sort({ createdAt: -1 })
 
         const totalComments = await Comment.countDocuments();
+        const curPostComments = await Comment.countDocuments({
+            ...(req.params.blogId && { blogId: new mongoose.Types.ObjectId(req.params.blogId) , isReply : false })
+        })
 
         const now = new Date();
 
@@ -100,7 +104,8 @@ export const getComments = async (req, res, next) => {
         res.status(200).json({
             comments,
             totalComments,
-            lastMonthComments
+            lastMonthComments,
+            curPostComments
         })
     } catch (error) {
         next(error)
