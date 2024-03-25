@@ -12,7 +12,7 @@ const Home = () => {
         </h1>
         <p className="max-w-[70%] text-center text-md sm:text-lg">
           I will not be writing blogs occasionally as this is created with the intention to improve web dev skills. That being said, I have written couple blogs those are utterly original.
-          <Link className="ms-2 font-semibold text-sky-500 hover:underline uppercase" to='/search'>Take a look!</Link>
+          <Link className="ms-2 font-semibold text-sky-500 underline hover:opacity-85 uppercase" to='/search'>Take a look!</Link>
         </p>
       </div>
       <FooterComponent></FooterComponent>

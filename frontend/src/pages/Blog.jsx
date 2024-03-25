@@ -21,12 +21,12 @@ const Blog = () => {
 
             try {
                 const res = await fetch(`/api/blog/get-blogs?slug=${blogSlug}`)
-
                 const data = await res.json();
 
                 if (data.success === false) {
                     setBlogError('Cannot fetch the blog data.')
                     setBlogLoading(false)
+                    return;
                 }
 
                 if (res.ok) {
@@ -40,8 +40,29 @@ const Blog = () => {
         }
 
         fetchBlog()
+
+
+
     }, [blogSlug])
 
+
+    useEffect(() => {
+        const increaseViewCount = async (blogId) => {
+            const res = await fetch(`/api/blog/increase-view-count/${blogId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            })
+            const data = await res.json();
+            if (data.success === false) {
+                setBlogError('Increased view count error')
+                return;
+            }
+        }
+
+        if(blog._id) {
+            increaseViewCount(blog._id)
+        }
+    }, [blog._id])
 
     return (
         <>
@@ -82,7 +103,7 @@ const Blog = () => {
 
             }
             {
-                !blogLoading && blog && 
+                !blogLoading && blog &&
                 <>
                     <div className="max-w-2xl px-6 py-16 mx-auto space-y-12">
                         <article className="space-y-8 dark:bg-black dark:text-gray-50">
@@ -124,8 +145,8 @@ const Blog = () => {
                         </div>
                         <CommentSection blogId={blog._id} />
                     </div>
-                    <RelatedArticles categoryId={blog.categoryId?._id} curBlogId={blog._id} />
-                    <FooterComponent/>
+                    <RelatedArticles categoryId={blog?.categoryId?._id} curBlogId={blog._id} />
+                    <FooterComponent />
                 </>
 
             }

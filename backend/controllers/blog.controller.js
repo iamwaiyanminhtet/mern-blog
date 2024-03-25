@@ -4,34 +4,34 @@ import { validationResult } from "express-validator"
 import mongoose from "mongoose"
 
 export const createBlog = async (req, res, next) => {
-    if(!req.user.isAdmin) {
+    if (!req.user.isAdmin) {
         next(errorHandler(403, "You are not allowed to make this request"));
     }
 
-    const {title, content, categoryId, userId, image} = req.body
+    const { title, content, categoryId, userId, image } = req.body
 
     // check if inputs are empty
-    if(!title || title === '' || !content || content === '' || !categoryId || categoryId === '') {
+    if (!title || title === '' || !content || content === '' || !categoryId || categoryId === '') {
         return next(errorHandler(400, "All Fileds are required!"));
     }
 
     // validate create blog data with express-validator
     const validationError = validationResult(req);
-    if(!validationError.isEmpty()) {
+    if (!validationError.isEmpty()) {
         next(errorHandler(400, validationError.errors[0].msg));
     }
 
     try {
-        const blog = await Blog.create({ 
-            title, 
-            content, 
-            slug : title.toLowerCase().split(' ').join('-').replace(/[^a-zA-Z0-9-]/g, '') ,
-            categoryId, 
+        const blog = await Blog.create({
+            title,
+            content,
+            slug: title.toLowerCase().split(' ').join('-').replace(/[^a-zA-Z0-9-]/g, ''),
+            categoryId,
             userId,
             image
         })
 
-        res.status(200).json({blog})
+        res.status(200).json({ blog })
 
     } catch (error) {
         next(error)
@@ -45,17 +45,17 @@ export const getBlogs = async (req, res, next) => {
         const sorting = req.query.sorting === "asc" ? 1 : -1;
 
         const blogs = await Blog.find({
-            ...(req.query.userId && { userId : req.query.userId }),
-            ...(req.query.categoryId && { categoryId : req.query.categoryId }),
-            ...(req.query.blogId && { _id : req.query.blogId }),
-            ...(req.query.slug && { slug : req.query.slug }),
+            ...(req.query.userId && { userId: req.query.userId }),
+            ...(req.query.categoryId && { categoryId: req.query.categoryId }),
+            ...(req.query.blogId && { _id: req.query.blogId }),
+            ...(req.query.slug && { slug: req.query.slug }),
             ...(req.query.searchTerm && {
-                $or : [
-                    {title : {$regex : req.query.searchTerm, $options : "i"}},
-                    {content : {$regex : req.query.searchTerm, $options : "i"}},
+                $or: [
+                    { title: { $regex: req.query.searchTerm, $options: "i" } },
+                    { content: { $regex: req.query.searchTerm, $options: "i" } },
                 ]
             }),
-        }).sort({updatedAt : sorting}).skip(startIndex).limit(limit).populate(['userId', 'categoryId']);
+        }).sort({ updatedAt: sorting }).skip(startIndex).limit(limit).populate(['userId', 'categoryId']);
 
         const totalBlogs = await Blog.countDocuments();
 
@@ -65,9 +65,9 @@ export const getBlogs = async (req, res, next) => {
             now.getFullYear(),
             now.getMonth() - 1,
             now.getDate()
-          );
-      
-        const lastMonthBlogs = await Blog.countDocuments({createdAt : { $gte : oneMonthAgo }})
+        );
+
+        const lastMonthBlogs = await Blog.countDocuments({ createdAt: { $gte: oneMonthAgo } })
 
         res.status(200).json({
             blogs,
@@ -84,11 +84,15 @@ export const updateBlog = async (req, res, next) => {
         return next(errorHandler(403, 'You are not allowed to update this blog'));
     }
 
-    const {title, content, categoryId, image} = req.body
+    const { title, content, categoryId, image } = req.body
 
-    const curBlog = await Blog.findOne({_id : req.params.blogId})
+    const curBlog = await Blog.findOne({ _id: req.params.blogId })
 
-    if(title === curBlog.title && content === curBlog.content && categoryId === curBlog.categoryId) {
+    if (!curBlog) {
+        return next(errorHandler(404, "Blog not found"))
+    }
+
+    if (title === curBlog.title && content === curBlog.content && categoryId === curBlog.categoryId) {
         return next(errorHandler(400, 'No Change has made.'));
     }
 
@@ -131,5 +135,27 @@ export const deleteBlog = async (req, res, next) => {
         }
     } catch (error) {
         next(error);
+    }
+}
+
+export const increaseViewCount = async (req, res, next) => {
+    try {
+        const curBlog = await Blog.findOne({ _id: req.params.blogId })
+
+        if (!curBlog) {
+            return next(errorHandler(404, "Blog not found"))
+        }
+
+        await Blog.findByIdAndUpdate(
+            req.params.blogId,
+            {
+                $inc : { viewCount : 1 }
+            },
+            {timestamps : false}
+        )
+
+        res.status(200).json({message : 'The view count has increased'})
+    } catch (error) {
+        next(error)
     }
 }

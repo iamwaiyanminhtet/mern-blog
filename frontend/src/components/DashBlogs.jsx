@@ -227,6 +227,7 @@ const DashBlogs = () => {
                   <Table.HeadCell>Title</Table.HeadCell>
                   <Table.HeadCell>Category</Table.HeadCell>
                   <Table.HeadCell>By</Table.HeadCell>
+                  <Table.HeadCell>Views</Table.HeadCell>
                   <Table.HeadCell>Edit</Table.HeadCell>
                   <Table.HeadCell>
                     <span className="sr-only">Edit</span>
@@ -258,6 +259,9 @@ const DashBlogs = () => {
                         </Table.Cell>
                         <Table.Cell>
                           {blog.userId?.username}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {blog.viewCount}
                         </Table.Cell>
                         <Table.Cell>
                           <Link to={`/update-blog/${blog._id}`} >
