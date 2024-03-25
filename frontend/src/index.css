@@ -14,3 +14,51 @@
 .ql-editor {
     font-size: 1.2rem;
 }
+
+.blog-content {
+    @apply text-lg
+}
+
+.blog-content h1 {
+    @apply text-3xl font-bold my-3
+}
+
+.blog-content h2 {
+    @apply text-2xl font-semibold my-2
+}
+
+.blog-content h3 {
+    @apply text-xl font-semibold my-1
+}
+
+.blog-content a {
+    @apply text-cyan-500 underline hover:opacity-90 italic font-semibold
+}
+
+.blog-content ul {
+    @apply max-w-full block mx-auto ps-20
+}
+
+.blog-content ul li {
+    @apply list-disc
+}
+
+.blog-content ol {
+    @apply max-w-full block mx-auto ps-20
+}
+
+.blog-content ol li {
+    @apply list-decimal
+}
+
+.blog-content blockquote {
+    @apply bg-sky-200 text-black text-xl border-l-8 px-5 py-3 my-3 border-sky-500 
+}
+
+.blog-content pre {
+    @apply block bg-slate-700 text-teal-200 font-mono mx-auto ps-10 py-5 rounded-xl my-3
+}
+
+.blog-content code {
+    @apply block bg-slate-700 text-teal-200 font-mono mx-auto ps-10 py-5 rounded-xl my-3
+}

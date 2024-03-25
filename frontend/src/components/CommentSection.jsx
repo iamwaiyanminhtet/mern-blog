@@ -28,7 +28,6 @@ const CommentSection = ({ blogId }) => {
             const res = await fetch(`/api/comment/get-comments/${blogId}?isReply=${false}`)
             const data = await res.json()
 
-            console.log(data)
             if (data.success === false) {
                 setLoadCommentsError(data.message)
             }
@@ -219,7 +218,7 @@ const CommentSection = ({ blogId }) => {
                                 placeholder="Write a comment..." onChange={(e) => setCommentInput(e.target.value)} value={commentInput} required maxLength={400} ></textarea>
                         </div>
                         <p className="text-end text-sm text-gray-600 dark:text-gray-400">{400 - commentInput.length} letters remaining</p>
-                        <div className="flex justify-between">
+                        <div className="flex">
                             <Button size='sm' type="submit" disabled={!curUser} >
                                 {
                                     createCommentLoading ?
@@ -229,7 +228,6 @@ const CommentSection = ({ blogId }) => {
                                         <span>Post a comment</span>
                                 }
                             </Button>
-                            <Button size="xs" className="mt-3" type="button">Hide Replies</Button>
                         </div>
                     </form>
                 </>

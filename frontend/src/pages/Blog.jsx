@@ -64,6 +64,8 @@ const Blog = () => {
         }
     }, [blog._id])
 
+    console.log(blog.content)
+
     return (
         <>
             {
@@ -133,9 +135,10 @@ const Blog = () => {
                                 <img src={blog.image} alt="" />
                             </div>
                             <div className="dark:text-gray-100">
-                                <div className="blog-content" >
+                                <div className="blog-content appearance-auto" >
                                     {HTMLReactParser(blog?.content || '')}
                                 </div>
+                                <h1 className="appearence-auto">Hello</h1>
                             </div>
                         </article>
                         <div>
