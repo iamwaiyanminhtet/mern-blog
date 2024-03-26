@@ -217,8 +217,9 @@ const DashCreateBlogPost = () => {
                         <HiCheck className="h-5 w-5" />
                     </div>
                     <div className="ml-3 text-sm font-normal">
-                        {createBlogSuccess}
-                    </div>
+                            {createBlogSuccess}
+                            <Link className="ms-1 font-semibold underline" to="/dashboard?tab=blogs">See Blog list</Link>
+                        </div>
                     <Toast.Toggle />
                 </Toast>
             }

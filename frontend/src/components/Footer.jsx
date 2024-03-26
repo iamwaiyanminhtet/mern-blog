@@ -7,7 +7,7 @@ const FooterComponent = () => {
             <div className="flex flex-col sm:flex-row  justify-start items-center  sm:items-center sm:justify-between gap-5 ">
                 <div className="flex flex-col sm:flex-row gap-4 text-sm items-center">
                     <div>
-                        <span>©2024 Wai Yan Min Htet <span className='mx-4 hidden sm:inline'>|</span> </span>
+                        <span>WIA © 2024 Wai Yan Min Htet <span className='mx-4 hidden sm:inline'>|</span> </span>
                     </div>
                     <div className='flex gap-5'>
                         <Link rel="noopener noreferrer" to='/' className='underline'>

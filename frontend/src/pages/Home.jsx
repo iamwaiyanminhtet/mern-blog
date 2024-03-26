@@ -5,9 +5,10 @@ const Home = () => {
   return (
     <div>
       <div className="h-[calc(90vh-80px)] max-h-[calc(80dvh-80px)] sm:max-h-[calc(90dvh-80px)] flex flex-col justify-center items-center p-5 gap-5">
-        <h1 className="text-5xl font-extrabold text-center lg:text-7xl 2xl:text-8xl">
-          <span className="text-transparent bg-gradient-to-bl bg-clip-text from-sky-400 via-cyan-500 to-emerald-500 dark:from-sky-500 dark:via-blue-400 dark:to-green-700 font-serif text-center">
-            Welcome
+        <h1 className="text-4xl font-extrabold text-center lg:text-6xl 2xl:text-7xl">
+          <span className="logo-text-shadow me-4">WIA</span>
+          <span className="text-transparent bg-gradient-to-bl bg-clip-text from-sky-400 via-cyan-500 to-emerald-500 dark:from-sky-500 dark:via-blue-400 dark:to-green-700 font-serif text-center ">
+            as a weird
           </span>
         </h1>
         <p className="max-w-[70%] text-center text-md sm:text-lg">

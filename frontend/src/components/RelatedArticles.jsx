@@ -63,7 +63,7 @@ const RelatedArticles = ({ categoryId, curBlogId }) => {
                         </div>
                         <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-4 items-center">
                             {
-                                relatedArticles.filter(rl => rl._id !== curBlogId)
+                                relatedArticles.length > 0 && relatedArticles.filter(rl => rl._id !== curBlogId)
                                     .map(relatedArticle =>
                                         <article key={relatedArticle._id} className="flex flex-col border-2 border-blue-500">
                                             <Link to={`/blogs/${relatedArticle.slug}`} aria-label={relatedArticle.title}>
@@ -87,9 +87,14 @@ const RelatedArticles = ({ categoryId, curBlogId }) => {
                                             </div>
                                         </article>
                                     )
-
                             }
                         </div>
+                        {
+                            relatedArticles.filter(rl => rl._id !== curBlogId).length === 0 &&
+                            <div className="flex justify-center">
+                                <p className="text-slate-400 text-center">There is no related articles for now :(</p>
+                            </div>
+                        }
                     </div>
                 </section>
             }

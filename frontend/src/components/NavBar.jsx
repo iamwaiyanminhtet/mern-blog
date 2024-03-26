@@ -4,7 +4,6 @@ import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import logo from "../assets/w-letter.jpg"
 import { toggleDarkTheme } from "../redux/theme/theme.slice.js"
 import { signOutSuccess } from "../redux/user/user.slice.js"
 
@@ -41,8 +40,7 @@ const NavBarComponent = () => {
         <Navbar fluid rounded className='border-b-2 dark:bg-inherit'>
             <Navbar.Brand as={'div'}>
                 <Link className='flex' to='/'>
-                    <img src={logo} className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
-                    <span className="self-center whitespace-nowrap text-2xl font-semibold  dark:text-slate-100">WYT</span>
+                    <span className="self-center whitespace-nowrap text-4xl ps-5 sm:ps-10 font-semibold  dark:text-slate-100 logo-text-shadow ">WIA</span>
                 </Link>
             </Navbar.Brand>
             <div className="flex md:order-2 gap-3 sm:gap-8  items-center">

@@ -15,6 +15,10 @@
     font-size: 1.2rem;
 }
 
+.logo-text-shadow {
+    text-shadow: 3px 2px 0px rgba(0, 247, 255, 0.66);
+}
+
 .blog-content {
     @apply text-lg
 }
@@ -56,9 +60,9 @@
 }
 
 .blog-content pre {
-    @apply block bg-slate-700 text-teal-200 font-mono mx-auto ps-10 py-5 rounded-xl my-3
+    @apply inline-block max-w-full bg-slate-700 text-teal-200 font-mono mx-auto px-5 py-5 rounded-xl my-3 text-wrap
 }
 
 .blog-content code {
-    @apply block bg-slate-700 text-teal-200 font-mono mx-auto ps-10 py-5 rounded-xl my-3
+    @apply inline-block max-w-full bg-slate-700 text-teal-200 font-mono mx-auto ps-10 py-5 rounded-xl my-3
 }

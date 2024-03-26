@@ -13,6 +13,7 @@ const CommentSection = ({ blogId }) => {
 
     // create comment states
     const [comments, setComments] = useState([])
+    const [fetchCommentsLoading, setFetchCommentLoading] = useState(false)
     const [createCommentError, setCreateCommentError] = useState(null)
     const [createCommentLoading, setCreateCommentLoading] = useState(false)
 
@@ -25,16 +26,19 @@ const CommentSection = ({ blogId }) => {
     // get comments
     useEffect(() => {
         const fetchComments = async () => {
+            setFetchCommentLoading(true)
             const res = await fetch(`/api/comment/get-comments/${blogId}?isReply=${false}`)
             const data = await res.json()
 
             if (data.success === false) {
                 setLoadCommentsError(data.message)
+                setFetchCommentLoading(false)
             }
 
             if (res.ok) {
                 setComments(data.comments)
                 setLoadCommentsError(null)
+                setFetchCommentLoading(false)
                 if (data.comments < 5 || data.comments.length === data.curPostComments) {
                     setShowMore(false)
                 }
@@ -167,7 +171,7 @@ const CommentSection = ({ blogId }) => {
         if (res.ok) {
             setComments([...comments, ...data.comments])
             setLoadCommentsError(null)
-            if (data.comments.length < 5 ) {
+            if (data.comments.length < 5) {
                 setShowMore(false)
             }
         }
@@ -184,7 +188,7 @@ const CommentSection = ({ blogId }) => {
 
                     {
                         !curUser &&
-                        <div className="bg-red-300 text-black p-3 text-sm">
+                        <div className="bg-red-300 text-black text-center rounded-md p-3 text-sm">
                             <Link to='/signin' className="underline font-semibold text-sm">Sign in </Link>
                             <span>to post a comment</span>
                         </div>
@@ -232,7 +236,14 @@ const CommentSection = ({ blogId }) => {
                     </form>
                 </>
                 {
-                    comments &&
+                    !fetchCommentsLoading && comments.length === 0 && 
+                    <div className="bg-sky-300 text-black text-center rounded-md p-3 text-sm font-bold">
+                        <span>Be the first to comment!</span>
+                    </div>
+                }
+
+                {
+                    !fetchCommentsLoading && comments && comments.length > 0 &&
                     <>
                         {
                             comments.map(comment =>
