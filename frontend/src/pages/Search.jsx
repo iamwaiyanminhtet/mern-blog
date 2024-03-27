@@ -47,7 +47,7 @@ const Search = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             setLoading(true)
-            const res = await fetch(`/api/blog/get-blogs`)
+            const res = await fetch(`/api/blog/get-blogs?limit=3`)
             const data = await res.json();
 
             if (data.success === false) {
@@ -66,7 +66,7 @@ const Search = () => {
                     total: data.totalBlogs
                 })
                 setLoading(false)
-                if (data.blogs.length < 5) {
+                if (data.blogs.length < 3) {
                     setShowMore(false)
                 }
             }
@@ -102,7 +102,7 @@ const Search = () => {
             setBlogsData({ ...blogsData, blogs: data.blogs })
             setBlogsDataCopy({ ...blogsData, blogs: data.blogs })
             setLoading(false)
-            if (data.blogs.length < 5 || data.totalBlogs === data.blogs.length) {
+            if (data.blogs.length < 3 || data.totalBlogs === data.blogs.length) {
                 setShowMore(false)
             }
         }
@@ -116,7 +116,7 @@ const Search = () => {
         const category = formData.categoryId === 'all' ? '' : formData.categoryId || ''
 
         const res = await fetch(
-            `/api/blog/get-blogs?startIndex=${startIndex}&searchTerm=${searchTerm}&sorting=${sorting}&categoryId=${category}`
+            `/api/blog/get-blogs?startIndex=${startIndex}&searchTerm=${searchTerm}&sorting=${sorting}&categoryId=${category}&limit=3`
         )
         const data = await res.json();
 
@@ -129,7 +129,7 @@ const Search = () => {
             setBlogsData({ ...blogsData, blogs: [...blogsData.blogs, ...data.blogs] })
             setBlogsDataCopy({ ...blogsData, blogs: [...blogsData.blogs, ...data.blogs] })
             setLoading(false)
-            if (data.blogs.length < 5 || data.totalBlogs === data.blogs.length) {
+            if (data.blogs.length < 3 || data.totalBlogs === data.blogs.length) {
                 setShowMore(false)
             }
         }
@@ -204,7 +204,7 @@ const Search = () => {
                                     handleSortingSelectChange(e)
                                 }} value={formData.sorting || ''} >
                                     <option value="desc">latest</option>
-                                    <option value="asc">newest</option>
+                                    <option value="asc">oldest</option>
                                 </Select>
                             </div>
                             <div className="flex">
@@ -234,8 +234,10 @@ const Search = () => {
                                             <Link rel="noopener noreferrer" className="text-2xl font-bold hover:underline" to={`/blogs/${blog.slug}`} >
                                                 {blog.title}
                                             </Link>
-                                            <div className="mt-2 line-clamp-1">
+                                            <div className="mt-2 hidden sm:inline-block ">
+                                                <p className=" line-clamp-1 ">
                                                 {HTMLReactParser(blog?.content || '')}
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between mt-4">

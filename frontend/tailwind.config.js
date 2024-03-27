@@ -1,5 +1,6 @@
 import flowBite from "flowbite/plugin"
 import autoprefixer from "autoprefixer"
+import scrollbar from "tailwind-scrollbar"
 
 export default {
   content: [
@@ -14,5 +15,6 @@ export default {
   plugins: [
     flowBite,
     autoprefixer,
+    scrollbar
   ],
 }

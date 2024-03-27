@@ -128,7 +128,7 @@ const DashComponent = () => {
       }
       {
         !loading &&
-        <div className="sm:ps-3 mt-3 sm:mt-0 w-full overflow-x-auto">
+        <div className="sm:ps-3 mt-3 sm:mt-0 w-full overflow-x-auto ">
           <Breadcrumb aria-label="Solid background breadcrumb example" className="bg-gray-50 px-5 py-3 dark:bg-gray-800 mb-3">
             <Link to='/'>
               <Breadcrumb.Item icon={HiHome} as={'div'} >
@@ -220,14 +220,14 @@ const DashComponent = () => {
           </div >
 
           <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
-          <div className="my-5 pr-3">
+          <div className="my-5 pr-3 overflow-x-auto scrollbar-thin scrollbar-thumb-sky-700 dark:scrollbar-thumb-sky-400 scrollbar-track-slate-300 dark:scrollbar-track-slate-600">
             <div className="flex items-center justify-evenly">
               <h2 className="text-2xl text-center my-5">Recent Blogs</h2>
               <Link to='/dashboard?tab=blogs'>
                 <Button gradientDuoTone="cyanToBlue" outline >See all</Button>
               </Link>
             </div>
-            <Table hoverable className="overflow-auto" >
+            <Table hoverable className="overflow-x-auto " >
               <Table.Head>
                 <Table.HeadCell>No</Table.HeadCell>
                 <Table.HeadCell>Image</Table.HeadCell>

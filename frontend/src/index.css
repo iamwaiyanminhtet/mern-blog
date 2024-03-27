@@ -56,13 +56,37 @@
 }
 
 .blog-content blockquote {
-    @apply bg-sky-200 text-black text-xl border-l-8 px-5 py-3 my-3 border-sky-500 
+    @apply bg-sky-200 text-black text-xl border-l-8 px-5 py-3 my-3 border-sky-500
 }
 
 .blog-content pre {
-    @apply inline-block max-w-full bg-slate-700 text-teal-200 font-mono mx-auto px-5 py-5 rounded-xl my-3 text-wrap
+    @apply inline-block max-w-full bg-slate-700 text-teal-200 font-mono mx-auto px-5 py-5 rounded-xl my-3 overflow-x-auto scrollbar-thin scrollbar-thumb-sky-700 dark:scrollbar-thumb-sky-400 scrollbar-track-slate-300 dark:scrollbar-track-slate-600
 }
 
 .blog-content code {
     @apply inline-block max-w-full bg-slate-700 text-teal-200 font-mono mx-auto ps-10 py-5 rounded-xl my-3
+}
+
+/* width */
+body::-webkit-scrollbar {
+    width: 7px;
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+    @apply bg-slate-300
+}
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    height: 10vh;
+    border-radius: 10px;
+    border: 5px solid rgb(55, 55, 55);
+    transition: 0.05ms;
+}
+
+/* Handle on hover */
+body::-webkit-scrollbar-thumb:hover {
+    border: 5px solid rgb(105, 105, 105);
 }

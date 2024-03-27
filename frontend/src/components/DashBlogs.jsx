@@ -125,7 +125,7 @@ const DashBlogs = () => {
 
   return (
     <>
-      <div className="sm:ps-3 mt-3 sm:mt-0 w-full overflow-x-auto">
+      <div className="sm:ps-3 mt-3 sm:mt-0 w-full overflow-x-auto ">
         <Breadcrumb aria-label="Solid background breadcrumb example" className="bg-gray-50 px-5 py-3 dark:bg-gray-800 mb-3">
           <Link to='/'>
             <Breadcrumb.Item icon={HiHome} as={'div'} >
@@ -176,7 +176,7 @@ const DashBlogs = () => {
         </div>
 
         {/* table data */}
-        <div className="overflow-x-auto mt-5">
+        <div className="overflow-x-auto mt-5  scrollbar-thin scrollbar-thumb-sky-700 dark:scrollbar-thumb-sky-400 scrollbar-track-slate-300 dark:scrollbar-track-slate-600">
           {/* user data loading */}
           {
             blogsDataLoading &&
@@ -220,7 +220,7 @@ const DashBlogs = () => {
           {
             !blogsDataLoading &&
             <>
-              <Table hoverable className="overflow-auto" >
+              <Table hoverable className="overflow-x-auto   " >
                 <Table.Head>
                   <Table.HeadCell>No</Table.HeadCell>
                   <Table.HeadCell>Image</Table.HeadCell>
@@ -249,8 +249,8 @@ const DashBlogs = () => {
                           )} size='lg' className="min-w-[150px] max-w-full" />
 
                         </Table.Cell>
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          <Link to={`/blogs/${blog.slug}`}>
+                        <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
+                          <Link to={`/blogs/${blog.slug}`} className="hover:underline">
                             {blog.title}
                           </Link>
                         </Table.Cell>

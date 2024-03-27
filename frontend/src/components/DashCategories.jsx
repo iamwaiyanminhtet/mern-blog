@@ -228,7 +228,7 @@ const DashCategories = () => {
                 </div>
 
                 {/* table data */}
-                <div className="overflow-x-auto mt-5">
+                <div className="overflow-x-auto mt-5 scrollbar-thin scrollbar-thumb-sky-700 dark:scrollbar-thumb-sky-400 scrollbar-track-slate-300 dark:scrollbar-track-slate-600">
                     {/* user data loading */}
                     {
                         categoryDataLoading &&
@@ -272,7 +272,7 @@ const DashCategories = () => {
                     {
                         !categoryDataLoading &&
                         <>
-                            <Table hoverable className="overflow-auto" >
+                            <Table hoverable className="overflow-x-auto" >
                                 <Table.Head>
                                     <Table.HeadCell>No</Table.HeadCell>
                                     <Table.HeadCell>Category</Table.HeadCell>
