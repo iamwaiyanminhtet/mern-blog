@@ -33,13 +33,14 @@ const DashSidebar = () => {
             })
 
             const data = await res.json();
+            if(data.success === false) {
+                console.log(data.message) 
+            }
             if (res.ok) {
                 dispatch(signOutSuccess());
                 navigate('/signin')
 
-            } else {
-                console.log(data.message)
-            }
+            } 
         } catch (error) {
             console.log(error)
         }

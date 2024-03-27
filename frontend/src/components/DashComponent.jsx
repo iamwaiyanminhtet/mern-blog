@@ -245,7 +245,7 @@ const DashComponent = () => {
                           <img
                             alt={blog.title}
                             referrerPolicy="no-referrer"
-                            src={blog.image}
+                            src={blog.image || blog.defaultImage}
                             {...props}
                           />
                         )} size='md' rounded />

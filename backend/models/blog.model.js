@@ -11,7 +11,10 @@ const blogSchema = mongoose.Schema({
     },
     image : {
         type : String,
-        default : "https://soliloquywp.com/wp-content/uploads/2016/08/How-to-Set-a-Default-Featured-Image-in-WordPress.png"
+    },
+    defaultImage : {
+        type : String,
+        default : "https://firebasestorage.googleapis.com/v0/b/blog-mern-4aaf2.appspot.com/o/default-blog-image.png?alt=media&token=4d6430ee-e097-4ec2-b655-f4b692f74f24"
     },
     slug : {
         type : String,

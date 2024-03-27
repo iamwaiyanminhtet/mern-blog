@@ -147,7 +147,6 @@ const DashCreateBlogPost = () => {
 
             const data = await res.json();
 
-            console.log(data)
             if (data.success === false) {
                 setCreateBlogError(data.message)
                 setCreateBlogLoading(false)

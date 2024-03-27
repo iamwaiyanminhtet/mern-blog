@@ -8,7 +8,7 @@ const Home = () => {
         <h1 className="text-4xl font-extrabold text-center lg:text-6xl 2xl:text-7xl">
           <span className="logo-text-shadow me-4">WIA</span>
           <span className="text-transparent bg-gradient-to-bl bg-clip-text from-sky-400 via-cyan-500 to-emerald-500 dark:from-sky-500 dark:via-blue-400 dark:to-green-700 font-serif text-center ">
-            as a weird
+            as in weird
           </span>
         </h1>
         <p className="max-w-[70%] text-center text-md sm:text-lg">

@@ -2,6 +2,7 @@ import { validationResult } from "express-validator";
 import bcryptjs from "bcryptjs";
 
 import User from "../models/user.model.js";
+import UserTrack from "../models/user-track.model.js";
 import { errorHandler } from "../utils/custom-error.js";
 import { sendBackUserData } from "../utils/send-back-user-data.js";
 
@@ -28,6 +29,10 @@ export const signUp = async (req, res, next) => {
             email : email.toLowerCase(),
             password : hashPassword 
         });
+
+        await UserTrack.create({
+            username, email
+        })
 
         res.status(200).json({message : "Sign up successfully"});
     } catch (error) {
@@ -90,6 +95,10 @@ export const googleLogin = async (req, res, next) => {
                 email : email.toLowerCase(),
                 password : hashPassword,
                 pfp : googlePfp 
+            })
+
+            await UserTrack.create({
+                username, email
             })
 
             const {token, user} = sendBackUserData(newUser);

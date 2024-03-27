@@ -10,6 +10,7 @@ import DashboardAdminProtected from "./private/DashboardAdminProtected"
 import DashUpdateBlog from "./components/DashUpdateBlog";
 import Blog from "./pages/Blog";
 import Search from "./pages/Search";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           </Route>
           <Route path="/blogs/:blogSlug" element={<Blog/>} />
           <Route path="/search" element={<Search/>} />
+          <Route path="/*" element={<NotFound/>} />
         </Routes>
       </BrowserRouter>
     </>

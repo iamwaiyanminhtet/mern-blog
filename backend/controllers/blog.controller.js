@@ -1,7 +1,6 @@
 import Blog from "../models/blog.model.js"
 import { errorHandler } from "../utils/custom-error.js"
 import { validationResult } from "express-validator"
-import mongoose from "mongoose"
 
 export const createBlog = async (req, res, next) => {
     if (!req.user.isAdmin) {

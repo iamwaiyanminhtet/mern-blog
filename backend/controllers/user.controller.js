@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import User from "../models/user.model.js";
+import UserTrack from "../models/user-track.model.js";
 import { errorHandler } from "../utils/custom-error.js";
 import { sendBackUserData } from "../utils/send-back-user-data.js";
 import bcryptjs from "bcryptjs";
@@ -98,5 +99,15 @@ export const deleteUser = async (req, res, next) => {
         }
     } catch (error) {
         next(error);
+    }
+}
+
+export const userTrackData = async (req, res, next) => {
+    try {
+        const data = await UserTrack.find().sort({createdAt : -1})
+
+        req.status(200).json(data);
+    } catch (error) {
+        next(error)
     }
 }

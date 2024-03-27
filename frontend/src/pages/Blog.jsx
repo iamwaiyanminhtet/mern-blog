@@ -64,8 +64,6 @@ const Blog = () => {
         }
     }, [blog._id])
 
-    console.log(blog.content)
-
     return (
         <>
             {
@@ -132,13 +130,15 @@ const Blog = () => {
                                 </div>
                             </div>
                             <div>
-                                <img src={blog.image} alt="" />
+                                <p className="text-sm text-slate-500 italic">opening this article will increase view by 1</p>
+                            </div>
+                            <div>
+                                <img src={blog.image || blog.defaultImage} alt="" />
                             </div>
                             <div className="dark:text-gray-100">
                                 <div className="blog-content appearance-auto" >
                                     {HTMLReactParser(blog?.content || '')}
                                 </div>
-                                <h1 className="appearence-auto">Hello</h1>
                             </div>
                         </article>
                         <div>

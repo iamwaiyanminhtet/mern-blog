@@ -62,7 +62,7 @@ const DashBlogs = () => {
 
   const handleDeleteBlog = async () => {
 
-    if (blogImgToDelete.includes('firebasestorage.googleapis.com')) {
+    if (blogImgToDelete !== undefined && blogImgToDelete.includes('firebasestorage.googleapis.com')) {
       deleteImgFromFirebase(blogImgToDelete)
     }
 
@@ -117,7 +117,7 @@ const DashBlogs = () => {
 
     // Delete the file
     deleteObject(desertRef).then(() => {
-      console.log('file deleted')
+      console.log('img deleted')
     }).catch((error) => {
       console.log(error)
     });
@@ -243,10 +243,10 @@ const DashBlogs = () => {
                             <img
                               alt={blog.title}
                               referrerPolicy="no-referrer"
-                              src={blog.image}
+                              src={blog.image || blog.defaultImage}
                               {...props}
                             />
-                          )} size='md' rounded />
+                          )} size='lg' className="min-w-[150px] max-w-full" />
 
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">

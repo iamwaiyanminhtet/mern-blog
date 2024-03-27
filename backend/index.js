@@ -46,3 +46,10 @@ app.use((err, req, res, next) => {
         message : errorMessage
     })
 })
+
+// when deploying on glitch, if you are using import/export, node version must be higher one
+
+// specify in package.json
+// "engines": {
+//     "node": ">=16.0.0"
+//   },

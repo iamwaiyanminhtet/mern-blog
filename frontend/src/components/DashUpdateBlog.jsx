@@ -18,6 +18,7 @@ const DashUpdateBlog = () => {
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState({});
+    const [blog, setBlog] = useState({})
 
     const [categories, setCategories] = useState([])
 
@@ -64,9 +65,27 @@ const DashUpdateBlog = () => {
                 title: data.blogs[0].title,
                 image: data.blogs[0].image
             })
+            setBlog(data.blogs[0])
         }
         fetchPost();
     }, [blogId])
+
+
+    // delete img from firebase
+    const deleteImgFromFirebase = (imageUrl) => {
+        const storage = getStorage();
+
+        // Create a reference to the file to delete
+        const desertRef = ref(storage, imageUrl);
+
+        // Delete the file
+        deleteObject(desertRef).then(() => {
+            console.log('file deleted')
+        }).catch((error) => {
+            console.log(error)
+        });
+    }
+
 
     // handle file input change locally
     const handleImgChange = (e) => {
@@ -74,6 +93,33 @@ const DashUpdateBlog = () => {
         if (file) {
             setImgFile(file)
             setImgFileUrl(URL.createObjectURL(file))
+        }
+    }
+
+    const updateBlogFetch = async (updateData) => {
+
+        setUpdateBlogSuccess(false)
+
+        const res = await fetch(`/api/blog/update/${blogId}`, {
+            method: "PUT",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updateData)
+        })
+
+        const data = await res.json();
+
+        if (data.success === false) {
+            setUpdateBlogError(data.message)
+            setUpdateBlogLoading(false)
+            return;
+        }
+
+        if (res.ok) {
+            setUpdateBlogSuccess(true)
+            setUpdateBlogLoading(false)
+        } {
+            setUpdateBlogError(data.message)
+            setUpdateBlogLoading(false)
         }
     }
 
@@ -119,10 +165,10 @@ const DashUpdateBlog = () => {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then(downloadUrl => {
                     try {
-                        if (formData.image.includes('firebasestorage.googleapis.com')) {
-                            deleteImgFromFirebase(formData.image)
-                        }
                         updateBlogFetch({ image: downloadUrl })
+                        if (blog.image.includes('firebasestorage.googleapis.com')) {
+                            deleteImgFromFirebase(blog.image)
+                        }
                     } catch (error) {
                         setImageFileUploadError(error.message)
                     }
@@ -156,49 +202,6 @@ const DashUpdateBlog = () => {
             })
         } catch (error) {
             setUpdateBlogError(error.message)
-            setUpdateBlogLoading(false)
-        }
-    }
-
-    // delete img from firebase
-    const deleteImgFromFirebase = (imageUrl) => {
-        const storage = getStorage();
-
-        // Create a reference to the file to delete
-        const desertRef = ref(storage, imageUrl);
-
-        // Delete the file
-        deleteObject(desertRef).then(() => {
-            console.log('file deleted')
-        }).catch((error) => {
-            console.log(error)
-        });
-    }
-
-    const updateBlogFetch = async (updateData) => {
-
-        setUpdateBlogSuccess(false)
-
-        const res = await fetch(`/api/blog/update/${blogId}`, {
-            method: "PUT",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updateData)
-        })
-
-        const data = await res.json();
-
-        console.log(data)
-        if (data.success === false) {
-            setUpdateBlogError(data.message)
-            setUpdateBlogLoading(false)
-            return;
-        }
-
-        if (res.ok) {
-            setUpdateBlogSuccess(true)
-            setUpdateBlogLoading(false)
-        } {
-            setUpdateBlogError(data.message)
             setUpdateBlogLoading(false)
         }
     }
@@ -293,10 +296,10 @@ const DashUpdateBlog = () => {
                                             <FileInput id="image" onChange={handleImgChange} />
                                         </div>
                                         <Button gradientDuoTone="greenToBlue" className="mt-3 text-black" onClick={handleImgUpdate} size='sm' >
-                                            <BiSolidUpArrowSquare /> <span className="ms-2">Create Image</span>
+                                            <BiSolidUpArrowSquare /> <span className="ms-2">Update Image</span>
                                         </Button>
                                     </div>
-                                    <FloatingLabel variant="outlined" label="title" id="title" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} value={formData.title || ''} />
+                                    <FloatingLabel variant="outlined" label="title" id="title" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} defaultValue={blog.title || ''} />
 
                                     <Select id="categoryId" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} required  >
                                         <option value="choose" >Choose a category to select</option>

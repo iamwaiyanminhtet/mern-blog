@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
     },
     defaultPfp : {
         type : String,
-        default : "https://i.pinimg.com/550x/89/64/99/8964998576cfac440b3a14df748fc670.jpg"
+        default : "https://firebasestorage.googleapis.com/v0/b/blog-mern-4aaf2.appspot.com/o/default-user-avatar.jpg?alt=media&token=a7398f73-a7a0-490a-a97d-3f9edf0e377a"
     },
     isAdmin : {
         type : Boolean,
