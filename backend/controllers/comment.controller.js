@@ -124,7 +124,7 @@ export const updateComment = async (req, res, next) => {
             return next(errorHandler(404, 'Comment not found'));
         }
 
-        if (req.user.isAdmin || comment.userId === new mongoose.Types.ObjectId(req.params.userId)) {
+        if (req.user.isAdmin || comment[0].userId == req.params.userId) {
             const editedComment = await Comment.findByIdAndUpdate(
                 req.params.commentId,
                 {

@@ -108,6 +108,7 @@ export const updateBlog = async (req, res, next) => {
                 $set: {
                     title,
                     content,
+                    slug : title.toLowerCase().split(' ').join('-').replace(/[^a-zA-Z0-9-]/g, ''),
                     categoryId,
                     image,
                 }
